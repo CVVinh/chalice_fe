@@ -14,26 +14,26 @@ export const store = createStore<State>({
     statusResponse: null
   },
   mutations: {
-    setMessage(state, message) {
+    setMessage(state:any, message:any) {
       state.message = message;
     },
-    setStatusResponse(state, status) {
+    setStatusResponse(state:any, status:any) {
       state.statusResponse = status;
     }
   },
   getters: {
-    getMessage(state) {
+    getMessage(state:any) {
       return state.message;
     },
-    getStatusResponse(state) {
+    getStatusResponse(state:any) {
       return state.statusResponse;
     }
   },
   actions: {
-    setMessage({commit }, message) {
+    setMessage({commit }:any, message:any) {
       commit('setMessage', message);
     },
-    setStatusResponse({ commit }, status) {
+    setStatusResponse({ commit }:any, status:any) {
       commit('setStatusResponse', status);
     }
   }

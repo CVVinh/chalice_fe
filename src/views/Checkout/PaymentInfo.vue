@@ -96,7 +96,7 @@
                             </p>
                         </v-col>
                         <v-col class="d-flex justify-end mt-3" cols="12">
-                            <p>{{ ConvertUtils.convertNumberToVnCurrency(totalCost) }}</p>
+                            <p>{{ ConvertUtils.convertNumberToVnCurrency(dataVehical.totalCost) }}</p>
                         </v-col>
                     </v-row>
                 </v-card-text>
@@ -150,29 +150,30 @@ var localstogared: any = ref({
     vehicleId: 1,
     rentalStartDate: '2023/06/15',
     rentalEndDate: '2023/06/19',
+    totalCost: 4242425,
     options: [
-        {
-            "optionId": 5,
-            "optionName": "option 1",
-            "optionValue": 200000.0
-        },
-        {
-            "optionId": 6,
-            "optionName": "option 2",
-            "optionValue": 250000.0
-        },
+      {
+          "optionId": 5,
+          "optionName": "option 1",
+          "optionValue": 200000.0
+      },
+      {
+          "optionId": 6,
+          "optionName": "option 2",
+          "optionValue": 250000.0
+      },
     ],
     issurances: [
-        {
-            "insuranceId": 4,
-            "insuranceName": "insurance 2",
-            "insuranceValue": 100000.0
-        },
-        {
-            "insuranceId": 5,
-            "insuranceName": "insurance 3",
-            "insuranceValue": 200000.0
-        },
+      {
+          "insuranceId": 4,
+          "insuranceName": "insurance 2",
+          "insuranceValue": 100000.0
+      },
+      {
+          "insuranceId": 5,
+          "insuranceName": "insurance 3",
+          "insuranceValue": 200000.0
+      },
     ]
 })
 
@@ -201,7 +202,7 @@ onMounted(async () => {
 });
 
 function onChangeSelected(data: any) {
-    baseUserInfo.value = mstBaseUser.value.filter((ele) => ele.baseId == data)[0];
+    baseUserInfo.value = mstBaseUser.value.filter((ele:any) => ele.baseId == data)[0];
     console.log(baseUserInfo);
 }
 
@@ -218,8 +219,8 @@ async function getCarInfomation() {
     var decore = localStorage.getItem('dataVehical');
     dataVehical = JSON.parse(decore? decore: '');
     var result = await VehiclesService.getById({vehicleId: dataVehical.vehicleId}); 
-    getByIdVehicles.value = result.data.vehicles_list[0];
     await calculatorOptionIssurance();
+    getByIdVehicles.value = result.data.vehicles_list[0];
 }
 
 async function calculatorOptionIssurance() {
@@ -233,6 +234,7 @@ async function calculatorOptionIssurance() {
         totaIssurance += item.insuranceValue
     }); 
     totalCost = (getByIdVehicles.value.vehicleValue * numberDay) + totaOption + totaIssurance;
+    dataVehical.totalCost = totalCost;
     console.log(totalCost);
 }
 

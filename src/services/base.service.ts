@@ -12,7 +12,7 @@ class BaseService {
   async getAll(dataParam?: object ): Promise<BaseResponse> {
     return await apiClient
       .get(CONST.API.BASE.GET_ALL_LIST_BASE, { params: dataParam})
-      .then((response) => {
+      .then(async (response:any) => {
         return response.data as BaseResponse
       })
   }
@@ -20,7 +20,7 @@ class BaseService {
   async getBaseUserInfo(id: number): Promise<BaseUserResponse> {
     return await apiClient
       .get(CONST.API.BASE.GET_ACCOUNT_USER_INFO(id))
-      .then((response) => {
+      .then(async (response:any) => {
         return response.data as BaseUserResponse
       })
   }
