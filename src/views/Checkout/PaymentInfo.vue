@@ -42,6 +42,9 @@
           <v-btn color="primary" @click="openCheckOutPaymentDialog()">
             button open dropdown
           </v-btn>
+          <v-btn color="primary" @click="addOrderRenderCar()">
+            button add order render
+          </v-btn>
         </div>
       </v-col>
 
@@ -126,6 +129,7 @@ import {
   onBeforeUpdate,
 } from "vue";
 import BaseService from "@/services/base.service";
+import RentalOrderService from "@/services/rental_order.service";
 import PaymentMethodsService from "@/services/payment_method.service";
 import { useStore } from "@/stores";
 import CheckoutPayment from "@/views/Checkout/CheckoutPayment.vue";
@@ -219,8 +223,8 @@ async function getCarInfomation() {
     var decore = localStorage.getItem('dataVehical');
     dataVehical = JSON.parse(decore? decore: '');
     var result = await VehiclesService.getById({vehicleId: dataVehical.vehicleId}); 
-    await calculatorOptionIssurance();
     getByIdVehicles.value = result.data.vehicles_list[0];
+    await calculatorOptionIssurance();
 }
 
 async function calculatorOptionIssurance() {
@@ -235,7 +239,32 @@ async function calculatorOptionIssurance() {
     }); 
     totalCost = (getByIdVehicles.value.vehicleValue * numberDay) + totaOption + totaIssurance;
     dataVehical.totalCost = totalCost;
-    console.log(totalCost);
+    console.log( dataVehical.totalCost);
+}
+
+async function addOrderRenderCar(){
+  var objectOrderDetail:any = []
+  dataVehical.options.forEach((item:any) => {
+    var object = {
+      vehicleId: dataVehical.vehicleId,
+      optionId: item.optionId,
+      quantity: 1,
+      amount: 1,
+      rentalStartDate: dataVehical.rentalStartDate,
+      rentalEndDate: dataVehical.rentalEndDate
+    }
+    objectOrderDetail.push(object)
+  }); 
+  var objectOrderCar = {
+    totalAmount: '4000750000',
+    paymentMethodId: 1,
+    rentalStatus: 1,
+    paymentedAt: new Date().toString(),
+    details: objectOrderDetail
+  }
+  await RentalOrderService.addRentalOrder(objectOrderCar).then(res => {
+    console.log("add order rental successful!");
+  })
 }
 
 </script>

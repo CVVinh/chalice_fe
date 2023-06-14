@@ -47,7 +47,7 @@ class PaymentMethodsService {
 
   async deletePaymentMethod(id: number): Promise<PaymentMethodsResponse> {
     return await apiClient
-      .put(CONST.API.PAYMENT_METHOD.DELETE(id))
+      .delete(CONST.API.PAYMENT_METHOD.DELETE(id))
       .then(async (response:any) => {
         return response.data as PaymentMethodsResponse
       })

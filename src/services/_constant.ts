@@ -49,6 +49,10 @@ const CONST = {
             UPDATE: (id: number) => `/func/update-payment-method-info?paymentMethodId=${id}`,
             DELETE: (id: number) => `/func/delete-payment-method?payment_method_id=${id}`,
         },
+        RENTAL_ORDER: {
+            LIST: `/rentalOrder`,
+            CREATE: `/rentalOrder`,
+        },
     }
 }
 
