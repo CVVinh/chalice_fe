@@ -38,6 +38,17 @@ const CONST = {
         OUTSOURCING_COMPANY: {
             LIST: '/func/get-outsourcing-company-list',
         },
+         BASE: {
+            GET_ALL_LIST_BASE: `/func/get-base-list`,
+            GET_ACCOUNT_USER_INFO: (id: number) =>  `/func/get-base-user-info?accountId=${id}`,
+        },
+        PAYMENT_METHOD: {
+            LIST: `/func/get-payment-method-list`,
+            DETAIL: (id: number) =>  `/func/get-payment-method-info?paymentMethodId=${id}`,
+            CREATE: `/func/add-payment-method`,
+            UPDATE: (id: number) => `/func/update-payment-method-info?paymentMethodId=${id}`,
+            DELETE: (id: number) => `/func/delete-payment-method?payment_method_id=${id}`,
+        },
     }
 }
 

@@ -29,13 +29,13 @@
 <script setup lang="ts">
 const navLists = [
   {
-    name: "お客様管理",
+   name: "お客様管理",
     icon: "mdi-account",
     lists: [
       {
-        id: "vehicle-management",
-        name: "車両管理",
-        link: "",
+        id: "account",
+        name: "Thông tin",
+        link: "/account",
       },
       {
         id: "maker-management",
@@ -63,7 +63,23 @@ const navLists = [
   {
     name: "車情報管理",
     icon: "mdi-car-side",
+    lists: [],
+  },
+  {
+    name: "Tìm kiếm xe",
+    icon: "mdi mdi-car-search",
     lists: [
+      {
+        id: "Car",
+        name: "Car",
+        // link: "/Makers",
+        link: "/car-search",
+      },
+      {
+        id: "Makers",
+        name: "Makers",
+        link: "/makers",
+      },
     ],
   },
   {
@@ -75,6 +91,28 @@ const navLists = [
     name: "売上管理",
     icon: "mdi-store",
     link: "",
+  },
+  {
+    name: "Checkout",
+    icon: "mdi-store",
+    lists: [
+      {
+        id: "PaymentInformation",
+        name: "Payment Management",
+        link: "/payment_management",
+      },
+    ],
+  },
+  {
+    name: "Chi tiết xe",
+    icon: "mdi-car-side",
+    lists: [
+      {
+        id: "car-details",
+        name: "Car Details",
+        link: "/car-details",
+      }
+    ]
   },
 ];
 </script>

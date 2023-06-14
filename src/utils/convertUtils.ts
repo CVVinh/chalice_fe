@@ -9,4 +9,15 @@ export default class ConvertUtils {
     });
     return convertedPrice;
   }
+
+  static convertNumberToVnCurrency(price: number | undefined) {
+    if (!price) {
+      return "0";
+    }
+    const convertedPrice = price.toLocaleString("vn-VN", {
+      style: "currency",
+      currency: "VND",
+    });
+    return convertedPrice;
+  }
 }

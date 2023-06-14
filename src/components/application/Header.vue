@@ -1,11 +1,9 @@
 <template>
-  <v-app-bar app color="#97E4FF" class="header">
+  <v-app-bar app color="#66B6BB" class="header">
     <v-container class="header-container">
       <v-row class="header-body">
         <v-col cols="1">
-          <v-app-bar-nav-icon
-            @click="openHideDrawer"
-          ></v-app-bar-nav-icon>
+          <v-app-bar-nav-icon @click="openHideDrawer"></v-app-bar-nav-icon>
         </v-col>
         <v-col>
           <div class="text-caption text-right">
@@ -25,19 +23,24 @@
 import ToolBar from "@/components/application/ToolBar.vue";
 
 const props = defineProps({
-  backgroundColor: { type: String, default: 'white'}
-})
-const emit = defineEmits(['openHideDrawer'])
+  backgroundColor: { type: String, default: "white" },
+});
+const emit = defineEmits(["openHideDrawer"]);
 /**
  * ユーザーがナビゲーション バーのアイコンをクリックしたときにイベントを発行する
  */
 function openHideDrawer() {
-  emit('openHideDrawer')
+  emit("openHideDrawer");
 }
 </script>
 
 <style lang="scss" scoped>
 .header {
+  height: 101px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 500px;
   .header-container {
     max-width: 100%;
     .header-body {

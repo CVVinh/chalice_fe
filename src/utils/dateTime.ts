@@ -41,5 +41,11 @@ export default {
   getMaxDateInMonth(date:Date){
     const getAllDayInMonth = moment(moment(date).format('YYYY/MM/DD'), 'YYYY-MM').daysInMonth();
     return moment(date).format(`YYYY/MM/${getAllDayInMonth}`)
-  }
+  },
+  calculatorDay(date1: any, date2: any){
+    var result = new Date(date1).valueOf() - new Date(date2).valueOf();
+    const timeDiff  = Math.abs(result);
+    const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
+    return daysDiff;
+  },
 }

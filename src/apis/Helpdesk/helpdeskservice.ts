@@ -14,18 +14,14 @@ class helpdeskservice extends BaseAPI {
 
   DELETE_ITEM_API_URL = this.BASE_URL.concat("/func/delete-kitting");
 
-  async gethelpdeskDataList(
-    queryParams: any
-  ): Promise<HelpdeskResponse> {
+  async gethelpdeskDataList(queryParams: any): Promise<HelpdeskResponse> {
     const response = await axios.get(this.GET_LIST_API_URL, {
       params: queryParams,
     });
     return response.data as HelpdeskResponse;
   }
 
-  async gethelpdeskById(
-    id: number
-  ): Promise<HelpdeskInformation> {
+  async gethelpdeskById(id: number): Promise<HelpdeskInformation> {
     const response = await axios.get(this.GET_kitting_API_URL, {
       params: {
         organization_name: id,
@@ -34,9 +30,7 @@ class helpdeskservice extends BaseAPI {
     return response.data as HelpdeskInformation;
   }
 
-  async saveOrUpdatehelpdeskData(
-    helpdeskData: HelpdeskInformation
-  ) {
+  async saveOrUpdatehelpdeskData(helpdeskData: HelpdeskInformation) {
     const response = await axios({
       url: helpdeskData.application_id
         ? this.UPDATE_ITEM_API_URL

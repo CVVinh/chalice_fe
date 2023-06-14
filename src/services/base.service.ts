@@ -1,7 +1,8 @@
-import axios from 'axios'
-import _CONFIG from '@/configs/_var'
+import CONST from '@/services/_constant'
 import BaseResponse from '@/interfaces/response/base-response.model';
-import BaseMaster from '@/interfaces/Base';
+import BaseUserResponse from '@/interfaces/response/base-response.model';
+import apiClient from './api.service'
+
 
 class BaseService {
   /**
@@ -9,8 +10,19 @@ class BaseService {
    * @param dataParam データを取得する条件です
    */
   async getAll(dataParam?: object ): Promise<BaseResponse> {
-    const response = await axios.get(`${_CONFIG.API_URL}/func/get-base-list`, { params: dataParam });
-    return response.data as BaseResponse;
+    return await apiClient
+      .get(CONST.API.BASE.GET_ALL_LIST_BASE, { params: dataParam})
+      .then((response) => {
+        return response.data as BaseResponse
+      })
+  }
+
+  async getBaseUserInfo(id: number): Promise<BaseUserResponse> {
+    return await apiClient
+      .get(CONST.API.BASE.GET_ACCOUNT_USER_INFO(id))
+      .then((response) => {
+        return response.data as BaseUserResponse
+      })
   }
 }
 

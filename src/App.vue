@@ -8,7 +8,13 @@
     />
     <v-main>
       <v-expand-transition>
-        <div v-if="showAlert" :class="['alert-message', {'alert-message-drawer-open': isDrawerOpen}]">
+        <div
+          v-if="showAlert"
+          :class="[
+            'alert-message',
+            { 'alert-message-drawer-open': isDrawerOpen },
+          ]"
+        >
           <v-alert
             density="compact"
             :type="getStatusRes === 200 ? 'info' : 'error'"
@@ -42,7 +48,7 @@ const isLoginPage = ref(false);
 const store = useStore();
 const getMsg = computed(() => store.getters.getMessage);
 const getStatusRes = computed(() => store.getters.getStatusResponse);
-const showAlert = ref(false)
+const showAlert = ref(false);
 /**
  * ユーザーが引き出しをクリックして開いたり隠したりしたときのイベントを処理します
  */
@@ -71,7 +77,7 @@ watch(showAlert, (newValue) => {
   if (!newValue) {
     store.dispatch("setMessage", "");
   }
-})
+});
 
 const handleOpenHideDrawer = () => {
   isDrawerOpen.value = !isDrawerOpen.value;
@@ -79,7 +85,7 @@ const handleOpenHideDrawer = () => {
 </script>
 
 <style scoped lang="scss">
-@import '@/assets/style/_variables.scss';
+@import "@/assets/style/_variables.scss";
 .app {
   min-height: calc(1 / 0.75 * 100vh);
   .alert-message {
@@ -91,5 +97,8 @@ const handleOpenHideDrawer = () => {
     position: fixed;
     z-index: $zindex-fixed;
   }
+}
+.v-main {
+  margin-top: 50px;
 }
 </style>

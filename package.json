@@ -10,12 +10,14 @@
     "@mdi/font": "7.0.96",
     "@vuepic/vue-datepicker": "^3.2.1",
     "axios": "^0.26.1",
+    "flag-icons": "^6.7.0",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "moment-timezone": "^0.5.39",
     "roboto-fontface": "*",
     "sass": "^1.56.1",
     "v-calendar": "^3.0.0-alpha.8",
+    "v-phone-input": "^3.0.4",
     "vue": "^3.2.38",
     "vue-axios": "^3.5.2",
     "vue-router": "^4.2.1",
@@ -24,6 +26,7 @@
     "webfontloader": "^1.0.0"
   },
   "devDependencies": {
+    "@iconify/vue": "^4.1.1",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.9",
     "@types/webfontloader": "^1.6.35",
