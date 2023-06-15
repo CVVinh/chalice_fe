@@ -12,46 +12,46 @@ class PaymentMethodsService {
   async getAllPaymentMethod(dataParam?: object ): Promise<PaymentMethodsResponse> {
     return await apiClient
       .get(CONST.API.PAYMENT_METHOD.LIST, { params: dataParam})
-      .then(async (response:any) => {
+      .then((response) => {
         return response.data as PaymentMethodsResponse
       })
-      .catch((error:any) => error.response);
+      .catch((error) => error.response);
   }
 
   async getPaymentMethodInfo(id: number): Promise<PaymentMethodsResponse> {
     return await apiClient
       .get(CONST.API.PAYMENT_METHOD.DETAIL(id))
-      .then(async (response:any) => {
+      .then((response) => {
         return response.data as PaymentMethodsResponse
       })
-      .catch((error:any) => error.response);
+      .catch((error) => error.response);
   }
 
   async addPaymentMethod(dataParam: object): Promise<PaymentMethodsResponse> {
     return await apiClient
       .post(CONST.API.PAYMENT_METHOD.CREATE, { params: dataParam})
-      .then(async (response:any) => {
+      .then((response) => {
         return response.data as PaymentMethodsResponse
       })
-      .catch((error:any) => error.response);
+      .catch((error) => error.response);
   }
 
   async updatePaymentMethod(id: number, dataParam: object): Promise<PaymentMethodsResponse> {
     return await apiClient
       .put(CONST.API.PAYMENT_METHOD.UPDATE(id), { params: dataParam})
-      .then(async (response:any) => {
+      .then((response) => {
         return response.data as PaymentMethodsResponse
       })
-      .catch((error:any) => error.response);
+      .catch((error) => error.response);
   }
 
   async deletePaymentMethod(id: number): Promise<PaymentMethodsResponse> {
     return await apiClient
-      .delete(CONST.API.PAYMENT_METHOD.DELETE(id))
-      .then(async (response:any) => {
+      .put(CONST.API.PAYMENT_METHOD.DELETE(id))
+      .then((response) => {
         return response.data as PaymentMethodsResponse
       })
-      .catch((error:any) => error.response);
+      .catch((error) => error.response);
   }
 
 }

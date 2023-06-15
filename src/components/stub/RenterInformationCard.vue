@@ -7,8 +7,8 @@
       <v-card-subtitle>Thông tin cá nhân của tài xế</v-card-subtitle>
     </template>
     <v-card-text>
-      <div>
-        <label for="inforUser"><b>Chọn thông tin người thê</b> </label>
+      <div :hidden="isOpen === true">
+        <label for="inforUser"><b>Chọn thông tin người thuê</b> </label>
         <v-select
           id="inforUser"
           v-model="infoUserSelected"
@@ -26,6 +26,7 @@
           placeholder="Nhập địa chỉ email của bạn"
           variant="outlined"
           v-model="baseUserInfo.eMailAddress"
+          :readonly="isOpen === true"
         >
         </v-text-field>
       </div>
@@ -36,6 +37,7 @@
           placeholder="Nhập địa chỉ"
           variant="outlined"
           v-model="baseUserInfo.address"
+          :readonly="isOpen === true"
         ></v-text-field>
       </div>
       <div>
@@ -45,6 +47,7 @@
           placeholder="Số fax"
           variant="outlined"
           v-model="baseUserInfo.faxNumber"
+          :readonly="isOpen === true"
         ></v-text-field>
       </div>
       <div>
@@ -56,6 +59,7 @@
             single-line="true"
             placeholder="Nhập số điện thoại của bạn"
             v-model="baseUserInfo.telephoneNumber"
+            :readonly="isOpen === true"
           />
         </div>
       </div>
@@ -64,8 +68,7 @@
 </template>
 
 <script setup lang="ts">
-import BaseUserResponse from "@/interfaces/response/base-response.model";
-import { onMounted, PropType, ref, watch } from "vue";
+import { onMounted, ref } from "vue";
 
 var infoUserSelected = ref(null);
 const props = defineProps({
@@ -73,24 +76,47 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  isOpen: {
+    type: Boolean,
+  },
+  baseUserInfo: {
+    type: Object,
+    default: () => ({
+      accountId: null,
+      baseId: null,
+      baseName: null,
+      prefCode: null,
+      address: null,
+      addressee: null,
+      eMailAddress: null,
+      telephoneNumber: null,
+      faxNumber: null,
+    }),
+  },
+  infomationUserInCheckOut: {
+    type: Object,
+    default: () => ({
+      accountId: null,
+      baseId: null,
+      baseName: null,
+      prefCode: null,
+      address: null,
+      addressee: null,
+      eMailAddress: null,
+      telephoneNumber: null,
+      faxNumber: null,
+    }),
+  },
 });
-
-var baseUserInfo: any = ref({
-  accountId: null,
-  baseId: null,
-  baseName: null,
-  prefCode: null,
-  address: null,
-  addressee: null,
-  eMailAddress: null,
-  telephoneNumber: null,
-  faxNumber: null,
+onMounted(() => {
+  if (props.infomationUserInCheckOut.eMailAddress !== null) {
+    Object.assign(props.baseUserInfo, props.infomationUserInCheckOut);
+  }
 });
-
-watch(infoUserSelected, (newValue) => {
-  baseUserInfo.value = props.mstBaseUser.filter((ele:any) => ele.baseId == newValue)[0];
-  console.log(baseUserInfo);
-});
-
-
+// watch(infoUserSelected, (newValue) => {
+//   baseUserInfo.value = props.mstBaseUser.filter(
+//     (ele: any) => ele.baseId == newValue
+//   )[0];
+//   console.log(baseUserInfo);
+// });
 </script>

@@ -103,16 +103,5 @@ const navLists = [
       },
     ],
   },
-  {
-    name: "Chi tiết xe",
-    icon: "mdi-car-side",
-    lists: [
-      {
-        id: "car-details",
-        name: "Car Details",
-        link: "/car-details",
-      }
-    ]
-  },
 ];
 </script>

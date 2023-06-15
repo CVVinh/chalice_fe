@@ -2,7 +2,7 @@
   <div class="pa-4">
     <h3>TÌM KIẾM XE</h3>
     <div class="elevation-5">
-      <SearchComponent>
+      <SearchComponent @onSearch="onClickSearch" @onClear="onClickClear">
         <template v-slot:searchForm>
           <v-form class="pb-3">
             <v-row>
@@ -11,7 +11,7 @@
                 <v-select
                   label="Chọn địa điểm"
                   name="メーカーID"
-                  v-model="dataSearch.store"
+                  v-model="dataSearch.storeId"
                   hide-details
                   variant="underlined"
                   :items="state.dataStore"
@@ -23,17 +23,19 @@
                 <h4>Loại xe</h4>
                 <v-select
                   label="Chọn loại xe"
-                  v-model="dataSearch.type"
+                  v-model="dataSearch.vehicleModel"
                   hide-details
                   variant="underlined"
-                  :items="dataType"
+                  :items="state.dataModel"
+                  item-title="modelName"
+                  item-value="modelId"
                 />
               </v-col>
               <v-col cols="3">
                 <h4>Số lượng chỗ ngồi</h4>
                 <v-select
                   label="Chọn số lượng chỗ ngồi"
-                  v-model="dataSearch.carseat"
+                  v-model="dataSearch.vehicleSeat"
                   hide-details
                   variant="underlined"
                   :items="dataSeat"
@@ -43,7 +45,7 @@
                 <h4>Hãng xe</h4>
                 <v-select
                   label="Chọn hãng xe"
-                  v-model="dataSearch.maker"
+                  v-model="dataSearch.makerId"
                   hide-details
                   variant="underlined"
                   :items="state.dataMaker"
@@ -76,8 +78,12 @@
                 <v-col>
                   <h1 class="text-uppercase">{{ item.vehicleName }}</h1>
                 </v-col>
-                <v-col class="text-left pt-7">
-                  <h4 class="text-disabled">{{ item.vehicleType }}</h4>
+                <v-col
+                  v-for="models in item.models_list"
+                  :key="models.modelId"
+                  class="text-left pt-7"
+                >
+                  <h4 class="text-disabled">{{ models.modelName }}</h4>
                 </v-col>
                 <span class="mdi mdi-map-marker"></span>
                 <v-col
@@ -134,6 +140,29 @@
           </v-row>
         </v-container>
       </div>
+      <div class="pagination">
+        <v-row>
+          <v-col>
+            <v-pagination
+              v-model="dataSearch.pageNum"
+              :length="Math.ceil(state.totalRecords / dataSearch.pageSize)"
+              size="small"
+              rounded="circle"
+            />
+          </v-col>
+        </v-row>
+        <div class="pagination_select">
+          <div class="d-flex align-center">
+            <v-select
+              density="compact"
+              v-model="dataSearch.pageSize"
+              hide-details
+              :items="[10, 20, 50]"
+              @onChange="onChange"
+            />
+          </div>
+        </div>
+      </div>
     </v-form>
   </div>
   <v-dialog v-model="carDetailsState.open">
@@ -154,52 +183,58 @@ import StoresService from "@/services/stores.service";
 import Stores from "@/interfaces/Stores";
 import MakersService from "@/services/makers.service";
 import Makers from "@/interfaces/Makers";
+import ModelService from "@/services/models.service";
+import Models from "@/interfaces/Models";
 import { it } from "node:test";
 import { log } from "node:console";
 
 const dataSearch = reactive({
-  store: null,
-  type: null,
-  carseat: null,
-  maker: null,
+  storeId: null,
+  vehicleModel: null,
+  vehicleSeat: null,
+  makerId: null,
   pageNum: 1,
-  pageSize: 10,
+  pageSize: 2,
 });
 
-const dataType = ["Sport", "Pickup", "Luxury"];
 const dataSeat = ["2", "4", "7", "16", "32"];
 
 const state = reactive({
   dataStore: [] as Stores[],
+  dataModel: [] as Models[],
   dataMaker: [] as Makers[],
   dataTable: [] as Vehicles[],
+  totalRecords: 0,
 });
 
 watch(
-  [
-    () => dataSearch.store,
-    () => dataSearch.type,
-    () => dataSearch.carseat,
-    () => dataSearch.maker,
-  ],
-  (
-    [newstore, newType, newCarseat, newMaker],
-    [oldstore, oldType, oldCarseat, oldMaker]
-  ) => {
-    console.log("newstore", newstore);
-    console.log("newType", newType);
-    console.log("newCarseat", newCarseat);
-    console.log("newMaker", newMaker);
-
-    // Gọi hàm fetchData_Vehicles() để tải lại dữ liệu phương tiện dựa trên giá trị mới của store hoặc carseat
-    fetchData_Vehicles();
+  [() => dataSearch.pageNum, () => dataSearch.pageSize],
+  ([newPageNum, newPageSize], [oldPageNum, oldPageSize]) => {
+    onChange();
   }
 );
+const onClickSearch = async () => {
+  search();
+};
+
+const onClickClear = async () => {
+  dataSearch.vehicleSeat = null;
+  dataSearch.makerId = null;
+  dataSearch.vehicleModel = null;
+  dataSearch.storeId = null;
+  fetchData_Vehicles();
+};
+const onChange = async () => {
+  search();
+};
 
 onMounted(async () => {
   // Lấy data của bảng store
   const Data_Stores = await StoresService.getAll();
   state.dataStore = [...Data_Stores?.data?.stores_list];
+  // Lấy data của bảng Model
+  const Data_Models = await ModelService.getAll();
+  state.dataModel = [...Data_Models?.data?.models_list];
   // Lấy data của bảng maker
   const Data_Makers = await MakersService.getAll();
   state.dataMaker = [...Data_Makers?.data?.makers_list];
@@ -210,17 +245,27 @@ onMounted(async () => {
 /**
  * データをロードする
  */
-const fetchData_Vehicles = async (isSearch = false) => {
+const fetchData_Vehicles = async () => {
   try {
-    if (isSearch) {
-      dataSearch.pageNum = 1;
-    }
     const response = await VehiclesService.getAll(dataSearch);
     if (response && response.data) {
       state.dataTable = response.data.vehicles_list;
+      state.totalRecords = response.data.totalRecords;
     }
   } catch (error) {
     console.log(error);
+  }
+};
+
+const search = async () => {
+  try {
+    state.dataTable = [];
+    const response = await VehiclesService.getByParam(dataSearch);
+    state.dataTable = response.data.vehicles_list;
+  } catch (error) {
+    // Handle the error
+  } finally {
+    // TODO: Turn off loading flag or handle loading state
   }
 };
 
@@ -273,5 +318,9 @@ button.v-btn.v-btn--elevated.v-theme--light.v-btn--density-default.v-btn--size-d
 }
 h1.text-for-money {
   font-size: 2.5vw;
+}
+span.v-btn__content {
+  color: black;
+  font-size: 25px;
 }
 </style>

@@ -15,4 +15,5 @@ export default interface Vehicles {
   vehicleDescribe?: string;
   makers_list?: any[];
   stores_list?: any[];
+  models_list?: any[];
 }

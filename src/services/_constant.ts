@@ -38,7 +38,7 @@ const CONST = {
         OUTSOURCING_COMPANY: {
             LIST: '/func/get-outsourcing-company-list',
         },
-        BASE: {
+         BASE: {
             GET_ALL_LIST_BASE: `/func/get-base-list`,
             GET_ACCOUNT_USER_INFO: (id: number) =>  `/func/get-base-user-info?accountId=${id}`,
         },
@@ -52,6 +52,16 @@ const CONST = {
         RENTAL_ORDER: {
             LIST: `/rentalOrder`,
             CREATE: `/rentalOrder`,
+        },
+        RENTAL_ORDER_CART: {
+            LIST: `/func/get-rental-order-cart-list`,
+            DETAIL: `/func/get-rental-order-cart-info`,
+            CREATE: `/func/add-rental-order-cart`,
+            CREATE_MULTI: `/func/add-multi-rental-order-cart`,
+            UPDATE: `/func/update-rental-order-cart-info`,
+            DELETE_SOFT: (id: number) => `/func/delete-soft-rental-order-cart?rentalOrdersCartId=${id}`,
+            DELETE_HARD: (id: number) => `/func/delete-hard-rental-order-cart?rentalOrdersCartId=${id}`,
+            DELETE_SOFT_MULTI: `/func/delete-soft-rental-order-cart`,
         },
     }
 }

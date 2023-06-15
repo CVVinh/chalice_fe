@@ -16,7 +16,7 @@
           width="50"
         />
       </div>
-      <div>
+      <div :hidden="isOpen === true">
         <label for="inforUser"><b>Chọn phương thức thanh toán</b> </label>
         <v-select
           id="inforUser"
@@ -28,16 +28,16 @@
           variant="outlined"
         ></v-select>
       </div>
-      <div v-if="paymentMethodSelected==1">
-          <v-alert
-            class="mt-3"
-            type="success"
-            title="Thanh toán bằng tiền mặt!"
-            text="Thanh toán trực tiếp với người cho thuê."
-          />
+      <div v-if="paymentMethodSelected == 1">
+        <v-alert
+          class="mt-3"
+          type="success"
+          title="Thanh toán bằng tiền mặt!"
+          text="Thanh toán trực tiếp với người cho thuê."
+        />
       </div>
       <div v-else>
-<div>
+        <div>
           <label for="cardHolder"
             ><b class="d-flex"
               >Tên Chủ Thẻ
@@ -85,7 +85,7 @@
                 > </label
               ><v-text-field
                 id="passcode"
-                placeholder="Nhập Tên của bạn"
+                placeholder="Nhập Mã Bảo Mật"
                 variant="outlined"
                 prepend-icon="mdi-lock-question"
               ></v-text-field
@@ -100,16 +100,18 @@
 <script setup lang="ts">
 import { onMounted, PropType, ref, watch } from "vue";
 
-var paymentMethodSelected:any = ref(null);
+var paymentMethodSelected: any = ref(null);
 const props = defineProps({
   mstPaymentMethods: {
     type: Array,
     required: true,
+  },
+  isOpen: {
+    type: Boolean,
   },
 });
 
 watch(paymentMethodSelected, (newValue) => {
   console.log(newValue);
 });
-
 </script>

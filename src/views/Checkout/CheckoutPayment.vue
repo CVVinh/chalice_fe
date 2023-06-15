@@ -20,10 +20,20 @@
               <v-col cols="5">
                 <div class="flex-column">
                   <v-sheet class="pa-2 ma-2">
-                    <car-information-card />
+                    <car-information-card
+                      :isOpen="this.isOpen"
+                      :infomationCarInCheckOut="getByIdVehicles"
+                    />
                   </v-sheet>
-                  <v-sheet class="pa-2 ma-2"> <renter-information /> </v-sheet>
-                  <v-sheet class="pa-2 ma-2"> <payment-method /> </v-sheet>
+                  <v-sheet class="pa-2 ma-2">
+                    <renter-information-card
+                      :isOpen="this.isOpen"
+                      :infomationUserInCheckOut="baseUserInfo"
+                    />
+                  </v-sheet>
+                  <v-sheet class="pa-2 ma-2">
+                    <payment-method-card :isOpen="this.isOpen" />
+                  </v-sheet>
                 </div>
               </v-col>
 
@@ -83,14 +93,14 @@
   </v-row>
 </template>
 <script>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import CarInformationCard from "@/components/stub/CarInformationCard.vue";
-import RenterInformation from "@/components/stub/RenterInformationCard.vue";
-import PaymentMethod from "@/components/stub/PaymentMethodCard.vue";
+import RenterInformationCard from "@/components/stub/RenterInformationCard.vue";
+import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
 
 export default {
-  props: ["isOpen"],
-  components: { CarInformationCard, RenterInformation, PaymentMethod },
+  props: ["isOpen", "baseUserInfo", "getByIdVehicles"],
+  components: { CarInformationCard, RenterInformationCard, PaymentMethodCard },
   setup(props, { emit }) {
     const phone = ref(null);
 

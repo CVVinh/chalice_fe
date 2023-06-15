@@ -1,4 +1,4 @@
-import ArrivalInfo from "../ArrivalInfo";
+import ArrivalInfo from "../AccountInfo";
 
 export default interface ArrivalResponse {
   message: string;

@@ -80,6 +80,20 @@ class VehiclesService {
     );
     return response as VehiclesResponse;
   }
+
+  /**
+   * すべてのアイテムを入手
+   * @param dataParam データを取得する条件です
+   */
+  async getByParam(dataParam?: object): Promise<VehiclesResponse> {
+    const response = await axios.get(
+      `${_CONFIG.API_URL}/func/get-vehicles-by-param`,
+      {
+        params: dataParam,
+      }
+    );
+    return response as VehiclesResponse;
+  }
 }
 
 export default new VehiclesService();
