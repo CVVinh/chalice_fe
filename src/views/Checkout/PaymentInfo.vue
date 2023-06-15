@@ -60,7 +60,6 @@
           <v-card width="100%">
             <v-card-item class="pa-5">
               <v-card-title>
-                <!-- <v-icon color="blue" icon="mdi-account-credit-card" size="50"></v-icon> -->
                 <span class="text-h4 font-weight-bold"
                   >Tổng chi phí thanh toán</span
                 >
@@ -92,7 +91,7 @@
                 <v-col
                   class="d-flex justify-space-between mt-2"
                   cols="12"
-                  v-for="value in dataVehical.issurances"
+                  v-for="value in dataVehical[0].insurances"
                   :key="value"
                 >
                   <span class="ml-15">{{ value.insuranceName }}:</span>
@@ -117,7 +116,7 @@
                 <v-col
                   class="d-flex justify-space-between mt-2"
                   cols="12"
-                  v-for="value in dataVehical.options"
+                  v-for="value in dataVehical[0].options"
                   :key="value"
                 >
                   <span class="ml-15">{{ value.optionName }}:</span>
@@ -135,34 +134,36 @@
               <v-divider class="mt-5"></v-divider>
               <v-row class="text-h5">
                 <v-col cols="12" class="mt-5">
-                  <p class="font-weight-black">
+                  <p class="font-weight-black" v-if="dataVehical">
                     Dự chi trong
                     {{
                       FormatDate.calculatorDay(
-                        dataVehical.rentalEndDate,
-                        dataVehical.rentalStartDate
+                        dataVehical[0].rentalOrderCart[0].rentalEndDate,
+                        dataVehical[0].rentalOrderCart[0].rentalStartDate
                       )
                     }}
                     ngày:
                     {{
-                      dataVehical
-                        ? FormatDate.formatDateAvoidWarning(
-                            new Date(dataVehical.rentalStartDate)
-                          )
-                        : ""
+                      FormatDate.formatDateAvoidWarning(
+                        new Date(
+                          dataVehical[0].rentalOrderCart[0].rentalStartDate
+                        )
+                      )
                     }}
                     -
                     {{
-                      dataVehical
-                        ? FormatDate.formatDateAvoidWarning(
-                            new Date(dataVehical.rentalEndDate)
-                          )
-                        : ""
+                      FormatDate.formatDateAvoidWarning(
+                        new Date(
+                          dataVehical[0].rentalOrderCart[0].rentalEndDate
+                        )
+                      )
                     }}
                   </p>
                 </v-col>
                 <v-col class="d-flex justify-end mt-3" cols="12">
-                  <p>{{ ConvertUtils.convertNumberToVnCurrency(totalCost) }}</p>
+                  <p v-if="dataVehical">
+                    {{ ConvertUtils.convertNumberToVnCurrency(totalCost) }}
+                  </p>
                 </v-col>
               </v-row>
             </v-card-text>
@@ -193,11 +194,11 @@ import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
 import VehiclesService from "@/services/vehicles.service";
 import FormatDate from "@/utils/dateTime";
 import ConvertUtils from "@/utils/convertUtils";
-import { watch } from "fs";
 
-const store = useStore();
-const getStatusRes = computed(() => store.getters.getStatusResponse);
+var store = useStore();
+var getStatusRes = computed(() => store.getters.getStatusResponse);
 var idUserCurrent = 1;
+var idVehical = 1;
 var mstBaseUser = ref<any[]>([]);
 var mstPaymentMethods = ref<any[]>([]);
 var getByIdVehicles = ref<any>(null);
@@ -214,49 +215,28 @@ var baseUserInfo = ref({
   telephoneNumber: null,
   faxNumber: null,
 });
-var localstogared: any = ref({
-  vehicleId: 1,
-  rentalStartDate: "2023/06/15",
-  rentalEndDate: "2023/06/19",
-  options: [
-    {
-      optionId: 5,
-      optionName: "option 1",
-      optionValue: 200000.0,
-    },
-    {
-      optionId: 6,
-      optionName: "option 2",
-      optionValue: 250000.0,
-    },
-  ],
-  issurances: [
-    {
-      insuranceId: 4,
-      insuranceName: "insurance 2",
-      insuranceValue: 100000.0,
-    },
-    {
-      insuranceId: 5,
-      insuranceName: "insurance 3",
-      insuranceValue: 200000.0,
-    },
-  ],
-});
-
-onBeforeMount(async () => {
-  localStorage.setItem("dataVehical", JSON.stringify(localstogared.value));
-  await getCarInfomation();
-});
 
 onMounted(async () => {
-  const baseUserTemp = await BaseService.getBaseUserInfo(idUserCurrent);
-  const paymentMethodTemp = await PaymentMethodsService.getAllPaymentMethod();
-  mstBaseUser.value = [...baseUserTemp.mstBaseUser];
-  mstPaymentMethods.value = [...paymentMethodTemp.mstPaymentMethods];
-  var result = await RentalOrderCartService.getAllRentalOrderCart();
-  console.log(result);
-  
+  await RentalOrderCartService.getAllRentalOrderCart({
+    accountId: idUserCurrent,
+    vehicleId: idVehical,
+    statusCart: 0,
+  }).then(async (res: any) => {
+    dataVehical.value = [...res.mstRenOrdCart];
+
+    await VehiclesService.getById({
+      vehicleId: dataVehical.value[0].vehical.vehicleId,
+    }).then(async (res: any) => {
+      getByIdVehicles.value = res.data.vehicles_list[0];
+      await calculatorOptionIssurance();
+    });
+  });
+  await BaseService.getBaseUserInfo(idUserCurrent).then(async (res: any) => {
+    mstBaseUser.value = [...res.mstBaseUser];
+  });
+  await PaymentMethodsService.getAllPaymentMethod().then(async (res: any) => {
+    mstPaymentMethods.value = [...res.mstPaymentMethods];
+  });
 });
 
 let openDialog = ref(false);
@@ -268,54 +248,44 @@ function closeCheckOutPaymentDialog() {
   openDialog.value = false;
 }
 
-async function getCarInfomation() {
-  var decore = localStorage.getItem("dataVehical");
-  dataVehical = JSON.parse(decore ? decore : "");
-  var result = await VehiclesService.getById({
-    vehicleId: dataVehical.vehicleId,
-  });
-  getByIdVehicles.value = result.data.vehicles_list[0];
-  await calculatorOptionIssurance();
-}
-
 async function calculatorOptionIssurance() {
   var numberDay: any = FormatDate.calculatorDay(
-    dataVehical.rentalEndDate,
-    dataVehical.rentalStartDate
+    dataVehical.value[0].rentalOrderCart[0].rentalEndDate,
+    dataVehical.value[0].rentalOrderCart[0].rentalStartDate
   );
   var totaOption: any = 0.0;
   var totaIssurance: any = 0.0;
-  dataVehical.options.forEach((item: any) => {
+  dataVehical.value[0].options.forEach((item: any) => {
     totaOption += item.optionValue;
   });
-  dataVehical.issurances.forEach((item: any) => {
+  dataVehical.value[0].insurances.forEach((item: any) => {
     totaIssurance += item.insuranceValue;
   });
-  totalCost =
+  totalCost.value =
     getByIdVehicles.value.vehicleValue * numberDay + totaOption + totaIssurance;
 }
 
-async function addOrderRenderCar() {
-  var objectOrderDetail: any = [];
-  dataVehical.options.forEach((item: any) => {
-    var object = {
-      vehicleId: dataVehical.vehicleId,
-      optionId: item.optionId,
-      quantity: 1,
-      amount: 1,
-      rentalStartDate: dataVehical.rentalStartDate,
-      rentalEndDate: dataVehical.rentalEndDate,
-    };
-    objectOrderDetail.push(object);
-  });
-  var objectOrderCar = {
-    totalAmount: 4000750000,
-    paymentMethodId: 1,
-    rentalStatus: 1,
-    paymentedAt: new Date().toString(),
-    details: objectOrderDetail,
-  };
-  await RentalOrderService.addRentalOrder(objectOrderCar);
-  console.log("add order rental successful!");
-}
+// async function addOrderRenderCar() {
+//   var objectOrderDetail: any = [];
+//   dataVehical.options.forEach((item: any) => {
+//     var object = {
+//       vehicleId: dataVehical.vehicleId,
+//       optionId: item.optionId,
+//       quantity: 1,
+//       amount: 1,
+//       rentalStartDate: dataVehical.rentalStartDate,
+//       rentalEndDate: dataVehical.rentalEndDate,
+//     };
+//     objectOrderDetail.push(object);
+//   });
+//   var objectOrderCar = {
+//     totalAmount: 4000750000,
+//     paymentMethodId: 1,
+//     rentalStatus: 1,
+//     paymentedAt: new Date().toString(),
+//     details: objectOrderDetail,
+//   };
+//   await RentalOrderService.addRentalOrder(objectOrderCar);
+//   console.log("add order rental successful!");
+// }
 </script>
