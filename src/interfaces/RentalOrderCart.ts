@@ -5,6 +5,8 @@ export default interface RentalOrderCart {
     optionId?: number,
     insuranceId?: number,
     statusCart?: number,
+    rentalStartDate?: string,
+    rentalEndDate?: string,
     
     createdBy?: number,
     modifiedBy?: number,

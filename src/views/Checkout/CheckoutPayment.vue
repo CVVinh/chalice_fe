@@ -19,10 +19,10 @@
             >
               <v-col cols="5">
                 <div class="flex-column">
-                  <v-sheet class="pa-2 ma-2">
+                  <v-sheet class="">
                     <car-information-card
                       :isOpen="this.isOpen"
-                      :infomationCarInCheckOut="getByIdVehicles"
+                      :infomationCarInCheckOut="listVehiclesSelected"
                     />
                   </v-sheet>
                   <v-sheet class="pa-2 ma-2">
@@ -39,47 +39,19 @@
 
               <v-col cols="5">
                 <v-sheet class="pa-2 ma-2">
-                  <v-card class="mx-auto elevation-5 pa-2" width="100%">
-                    <template v-slot:title>
-                      <v-card-title class="font-weight-bold"
-                        ><h2>Tổng Chi Phí Thanh Toán</h2></v-card-title
-                      >
-                    </template>
-
-                    <v-card-text class="ma-5">
-                      <div class="d-flex justify-space-between">
-                        <div style="font-size: large">Phí Thuê Xe</div>
-                        <div
-                          class="d-flex flex-column"
-                          style="font-size: large"
-                        >
-                          <b>6,000,000</b>
-                          <p class="d-flex justify-end">300,000</p>
-                        </div>
-                      </div>
-                      <div
-                        class="d-flex justify-space-between mb-2"
-                        style="font-size: large"
-                      >
-                        <div>Bảo Hiểm</div>
-                        <div
-                          class="d-flex flex-column"
-                          style="font-size: large"
-                        >
-                          <b>6,000,000</b>
-                          <p class="d-flex justify-end">300,000</p>
-                        </div>
-                      </div>
-                      <hr class="mb-3" />
-                      <h2>Dự chi cho 3 ngày: 13/06/2023 - 16/06/2023</h2>
-                      <div class="d-flex justify-end"><h2>6,000,000</h2></div>
-                    </v-card-text>
-                  </v-card>
+                  <payment-price-card
+                    :isOpen="this.isOpen"
+                    :dataVehicalInCheckOut="dataVehical"
+                    :infomationCarInCheckOut="listVehiclesSelected"
+                    :totalCostInCheckOut="totalCost"
+                    :listVehicleInCheckOut="listDataVehicals"
+                  />
                   <v-btn
                     style="width: 100%"
                     color="green"
                     variant="elevated"
                     class="mt-3 elevation-5"
+                    @click="CheckOut()"
                   >
                     Xác nhận thanh toán
                   </v-btn></v-sheet
@@ -97,20 +69,39 @@ import { ref, onMounted } from "vue";
 import CarInformationCard from "@/components/stub/CarInformationCard.vue";
 import RenterInformationCard from "@/components/stub/RenterInformationCard.vue";
 import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
+import PaymentPriceCard from "@/components/stub/PaymentPriceCard.vue";
+import { useRouter } from "vue-router";
 
 export default {
-  props: ["isOpen", "baseUserInfo", "getByIdVehicles"],
-  components: { CarInformationCard, RenterInformationCard, PaymentMethodCard },
+  props: [
+    "isOpen",
+    "baseUserInfo",
+    "listVehiclesSelected",
+    "dataVehical",
+    "totalCost",
+    "listDataVehicals",
+  ],
+  components: {
+    CarInformationCard,
+    RenterInformationCard,
+    PaymentMethodCard,
+    PaymentPriceCard,
+  },
   setup(props, { emit }) {
+    const router = useRouter();
     const phone = ref(null);
 
     const closeDialog = () => {
       emit("closeDialog");
     };
+    function CheckOut() {
+      console.log("This is data", props.listDataVehicals);
+    }
 
     return {
       phone,
       closeDialog,
+      CheckOut,
     };
   },
 };

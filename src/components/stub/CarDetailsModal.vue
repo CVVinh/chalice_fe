@@ -124,7 +124,7 @@
           </v-col>
           <v-col cols="3.5" class="body-right">
             <v-row>
-              <h1 class="text-price">{{ item.vehicleValue?.toLocaleString() }}đ/ngày</h1>
+              <h1 class="text-price">{{ item.vehicleValue?.toLocaleString() }}đ/giờ</h1>
             </v-row>
             <div class="note">
               <div class="note-text">
@@ -132,9 +132,10 @@
                   <div class="received-date">
                     <v-col>
                       <h4>Ngày nhận xe</h4>
-                      <vc-input-date 
+                      <!-- <vc-input-date
                         v-model="state.receivedDate"
-                      ></vc-input-date>
+                      ></vc-input-date> -->
+                      <input type="datetime-local" v-model="state.receivedDate"/>
                     </v-col>
                     <span
                       v-if="receivedDateInvalid"
@@ -144,11 +145,14 @@
                   <div class="return-date">
                     <v-col>
                       <h4>Ngày trả xe</h4>
-                      <vc-input-date 
+                      <!-- <vc-input-date
                         v-model="state.returnDate"
                         :disabled="disableReturnDate"
-                      ></vc-input-date>
-                      
+                      ></vc-input-date> -->
+                      <input 
+                        type="datetime-local" 
+                        v-model="state.returnDate"
+                        :disabled="disableReturnDate"/>
                     </v-col>
                     <span
                       v-if="returnDateInvalid"
@@ -203,7 +207,7 @@
                   <div>  
                     <v-row>
                       <v-col>
-                        <h2>Đơn giá thuê theo 1 ngày</h2>
+                        <h2>Đơn giá thuê theo giờ</h2>
                       </v-col>
                       <v-col class="align-right">
                         <h2>{{ item.vehicleValue?.toLocaleString() }}đ</h2>
@@ -234,7 +238,7 @@
                       <h2>Tổng thời gian thuê</h2>
                     </v-col>
                     <v-col class="align-right">
-                      <h2>{{ borrowingTime }} ngày</h2>
+                      <h2>{{ borrowingTime }} giờ</h2>
                     </v-col>
                   </v-row>                                                           
                   <v-row>
@@ -267,8 +271,12 @@
                   <v-col></v-col>
                 </v-row>
                 <v-row  class="book-a-car">
-                  <v-btn :disabled="isBookButtonDisabled">Đặt Xe</v-btn>
+                  <v-btn 
+                    :disabled="isBookButtonDisabled"
+                    @click="clickBookACar()"
+                  >Đặt Xe</v-btn>
                 </v-row>
+                <div v-if="state.status" class="success-message">{{ state.successMessage }}</div>
               </div>                               
             </div>                           
           </v-col>               
@@ -280,14 +288,18 @@
 </template>
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-import { reactive, onMounted, computed, watchEffect } from "vue";
+import { reactive, onMounted, computed, watch, ref } from "vue";
 import VehiclesService from "@/services/vehicles.service";
 import Vehicles from "@/interfaces/Vehicles";
 import Options from "@/interfaces/Options";
 import OptionService from "@/services/options.service";
 import Insurances from "@/interfaces/Insurances";
 import InsuranceService from "@/services/insurances.service";
+import RentalOrderCartService from "@/services/rental_order_cart.service"
+import { Exception } from 'sass';
+import { useRouter } from "vue-router";
 
+var router = useRouter();
 interface Emits {
   (event: "clickCarDetail"): void;
 }
@@ -317,6 +329,8 @@ const state = reactive({
   receivedDate: null,
   returnDate: null,
   totalRentalFee: 0,
+  successMessage: '',
+  status: false,
 });
 
 onMounted( async () => {
@@ -389,7 +403,7 @@ const borrowingTime = computed(() => {
     const receivedTime = new Date(state.receivedDate);
     const returnTime = new Date(state.returnDate);
     const timeDiff = returnTime.getTime() - receivedTime.getTime();
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));  
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600));  
     return daysDiff;
   } else {
     return 0;
@@ -461,8 +475,63 @@ const isBookButtonDisabled = computed(() => {
   return !state.returnDate || returnDateInvalid.value;
 });
 
+const clickBookACar = async () => {
+  try {
+    var oderCards: any = [];
+    if (selectedOptions.value) {
+      selectedOptions.value.forEach((option) => {
+        var oderCard = {
+          accountId: 2,
+          vehicleId: data.vehicleId,
+          optionId: option?.optionId,
+          rentalStartDate: state.receivedDate,
+          rentalEndDate: state.returnDate,
+          statusCart: 0,
+          createdBy: 2,
+        };
+        oderCards.push(oderCard)
+      });
+    };
+    if (selectedInsurances.value) {
+      selectedInsurances.value.forEach((insurance) => {
+        var oderCard = {
+          "accountId": 2,
+          "vehicleId": data.vehicleId,
+          "insuranceId": insurance?.insuranceId,
+          "rentalStartDate": state.receivedDate,
+          "rentalEndDate": state.returnDate,
+          "statusCart": 0,
+          "createdBy": 2,
+        };
+        oderCards.push(oderCard)
+      });
+    };
+    if(oderCards.length === 0) {
+       var oderCard = {
+          "accountId": 2,
+          "vehicleId": data.vehicleId,
+          "rentalStartDate": state.receivedDate,
+          "rentalEndDate": state.returnDate,
+          "statusCart": 0,
+          "createdBy": 2,
+        };
+      oderCards.push(oderCard)
+    } 
+    await RentalOrderCartService.addMultiRentalOrderCart(oderCards);
+    state.status = true
+    state.successMessage = 'Đặt xe thành công!';
+    router.push('/payment_management');
+  } catch (error){
+    console.log(error);
+  }
+}
+
 </script>
 <style lang="css" scoped>
+.v-card.v-theme--light.v-card--density-default.v-card--variant-elevated{
+   max-width: 90%;
+   border-radius: 30px;
+}
 div.header {
   padding: 20px;
 }
@@ -500,7 +569,7 @@ div.image-right.image-margin {
   margin-bottom: 10px;
 }
 div.body {
-  width: 73%;
+  width: 82%;
   display: flex;
 }
 .v-col.v-col-8.body-left {
@@ -669,5 +738,10 @@ div.expense .v-row .v-col.left h2 {
 }
 .align-right {
   text-align: right;
+}
+.success-message{
+  color: green;
+  font-size: 25px;
+  text-align: center;
 }
 </style>

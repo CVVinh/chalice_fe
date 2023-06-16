@@ -194,7 +194,7 @@ const dataSearch = reactive({
   vehicleSeat: null,
   makerId: null,
   pageNum: 1,
-  pageSize: 2,
+  pageSize: 5,
 });
 
 const dataSeat = ["2", "4", "7", "16", "32"];
@@ -226,6 +226,7 @@ const onClickClear = async () => {
 };
 const onChange = async () => {
   search();
+  // fetchData_Vehicles();
 };
 
 onMounted(async () => {
@@ -248,6 +249,7 @@ onMounted(async () => {
 const fetchData_Vehicles = async () => {
   try {
     const response = await VehiclesService.getAll(dataSearch);
+    console.log("fetchData_Vehicles", response);
     if (response && response.data) {
       state.dataTable = response.data.vehicles_list;
       state.totalRecords = response.data.totalRecords;
@@ -260,8 +262,11 @@ const fetchData_Vehicles = async () => {
 const search = async () => {
   try {
     state.dataTable = [];
+    state.totalRecords = 0;
     const response = await VehiclesService.getByParam(dataSearch);
+
     state.dataTable = response.data.vehicles_list;
+    state.totalRecords = response.data.totalRecords;
   } catch (error) {
     // Handle the error
   } finally {
@@ -322,5 +327,8 @@ h1.text-for-money {
 span.v-btn__content {
   color: black;
   font-size: 25px;
+}
+.v-overlay.v-overlay--active.v-theme--light.v-locale--is-ltr.v-dialog.v-overlay--scroll-blocked {
+  padding-left: 10%;
 }
 </style>

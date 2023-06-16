@@ -71,6 +71,14 @@ class RentalOrderCartService {
       })
       .catch((error) => error.response);
   }
+  async addMultiRentalOrderCart(dataParam: object): Promise<RentalOrderCartCustomerResponse> {
+    return await apiClient
+      .post(CONST.API.RENTAL_ORDER_CART.CREATE_MULTI, { params: dataParam})
+      .then((response) => {
+        return response.data as RentalOrderCartCustomerResponse
+      })
+      .catch((error) => error.response);
+  }
 }
 
 export default new RentalOrderCartService();

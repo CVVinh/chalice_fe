@@ -52,13 +52,22 @@
       </div>
       <div>
         <label for="telephoneNumber"><b>Số điện thoại</b> </label>
-        <div class="mt-2">
+        <div class="mt-2" v-if="isOpen === false">
           <v-phone-input
             id="telephoneNumber"
             variant="outlined"
             single-line="true"
             placeholder="Nhập số điện thoại của bạn"
             v-model="baseUserInfo.telephoneNumber"
+          />
+        </div>
+        <div class="mt-2" v-else>
+          <v-phone-input
+            id="telephoneNumber"
+            variant="outlined"
+            single-line="true"
+            placeholder="Nhập số điện thoại của bạn"
+            v-model="infomationUserInCheckOut.telephoneNumber"
             :readonly="isOpen === true"
           />
         </div>
@@ -109,8 +118,10 @@ const props = defineProps({
   },
 });
 onMounted(() => {
-  if (props.infomationUserInCheckOut.eMailAddress !== null) {
+  if (props.isOpen === true) {
     Object.assign(props.baseUserInfo, props.infomationUserInCheckOut);
+    props.baseUserInfo.telephoneNumber =
+      props.infomationUserInCheckOut.telephoneNumber;
   }
 });
 // watch(infoUserSelected, (newValue) => {

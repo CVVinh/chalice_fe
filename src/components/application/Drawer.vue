@@ -98,7 +98,7 @@ const navLists = [
     lists: [
       {
         id: "PaymentInformation",
-        name: "Payment Management",
+        name: "Payment_Management",
         link: "/payment_management",
       },
     ],

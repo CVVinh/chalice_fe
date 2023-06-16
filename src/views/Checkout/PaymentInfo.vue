@@ -29,8 +29,12 @@
         </v-alert>
 
         <!-- car information ordered  -->
-        <v-sheet class="mt-5 mb-5">
-          <CarInformationCard :getByIdVehicles="getByIdVehicles" />
+        <v-sheet class="mb-5">
+          <CarInformationCard
+            :getByIdVehicles="getByIdVehicles"
+            :listDataVehicals="listDataVehicals"
+            @arrVehicalSelected="calculatorTotalCost($event)"
+          />
         </v-sheet>
 
         <!-- info user -->
@@ -49,126 +53,14 @@
           <v-btn color="primary" @click="openCheckOutPaymentDialog()">
             button open dropdown
           </v-btn>
-          <!-- <v-btn color="primary" @click="addOrderRenderCar()">
-            button add order render
-          </v-btn> -->
         </div>
       </v-col>
-
       <v-col cols="4" xs="12">
-        <v-sheet elevation="5">
-          <v-card width="100%">
-            <v-card-item class="pa-5">
-              <v-card-title>
-                <span class="text-h4 font-weight-bold"
-                  >Tổng chi phí thanh toán</span
-                >
-              </v-card-title>
-            </v-card-item>
-            <v-card-text class="ml-2 pa-10">
-              <v-row class="text-h5">
-                <v-col class="d-flex justify-space-between mt-2" cols="12">
-                  <span class="font-weight-bold">Phí thuê xe:</span>
-                  <span>
-                    <p>
-                      {{
-                        getByIdVehicles
-                          ? ConvertUtils.convertNumberToVnCurrency(
-                              getByIdVehicles.vehicleValue
-                            )
-                          : ""
-                      }}
-                    </p>
-                    <!-- <small>290.800</small> -->
-                  </span>
-                </v-col>
-              </v-row>
-              <v-divider class="mt-5 mb-5"></v-divider>
-              <v-row>
-                <v-col class="text-h5 font-weight-bold">Bảo hiểm</v-col>
-              </v-row>
-              <v-row class="text-h5" v-if="dataVehical">
-                <v-col
-                  class="d-flex justify-space-between mt-2"
-                  cols="12"
-                  v-for="value in dataVehical[0].insurances"
-                  :key="value"
-                >
-                  <span class="ml-15">{{ value.insuranceName }}:</span>
-                  <span>
-                    <p>
-                      {{
-                        ConvertUtils.convertNumberToVnCurrency(
-                          value.insuranceValue
-                        )
-                      }}
-                    </p>
-                  </span>
-                </v-col>
-              </v-row>
-              <v-divider class="mt-5 mb-5"></v-divider>
-              <v-row>
-                <v-col class="text-h5 font-weight-bold"
-                  >Các lựa chọn khác</v-col
-                >
-              </v-row>
-              <v-row class="text-h5" v-if="dataVehical">
-                <v-col
-                  class="d-flex justify-space-between mt-2"
-                  cols="12"
-                  v-for="value in dataVehical[0].options"
-                  :key="value"
-                >
-                  <span class="ml-15">{{ value.optionName }}:</span>
-                  <span>
-                    <p>
-                      {{
-                        ConvertUtils.convertNumberToVnCurrency(
-                          value.optionValue
-                        )
-                      }}
-                    </p>
-                  </span>
-                </v-col>
-              </v-row>
-              <v-divider class="mt-5"></v-divider>
-              <v-row class="text-h5">
-                <v-col cols="12" class="mt-5">
-                  <p class="font-weight-black" v-if="dataVehical">
-                    Dự chi trong
-                    {{
-                      FormatDate.calculatorDay(
-                        dataVehical[0].rentalOrderCart[0].rentalEndDate,
-                        dataVehical[0].rentalOrderCart[0].rentalStartDate
-                      )
-                    }}
-                    ngày:
-                    {{
-                      FormatDate.formatDateAvoidWarning(
-                        new Date(
-                          dataVehical[0].rentalOrderCart[0].rentalStartDate
-                        )
-                      )
-                    }}
-                    -
-                    {{
-                      FormatDate.formatDateAvoidWarning(
-                        new Date(
-                          dataVehical[0].rentalOrderCart[0].rentalEndDate
-                        )
-                      )
-                    }}
-                  </p>
-                </v-col>
-                <v-col class="d-flex justify-end mt-3" cols="12">
-                  <p v-if="dataVehical">
-                    {{ ConvertUtils.convertNumberToVnCurrency(totalCost) }}
-                  </p>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-sheet>
+        <payment-price-card
+          :listVehiclesSelected="listVehiclesSelected"
+          :listTotalCost="listTotalCost"
+          :totalCost="totalCost"
+        />
       </v-col>
     </v-row>
   </v-container>
@@ -176,7 +68,11 @@
     :isOpen="openDialog"
     @closeDialog="closeCheckOutPaymentDialog()"
     :baseUserInfo="baseUserInfo"
-    :getByIdVehicles="getByIdVehicles"
+    :listVehiclesSelected="listVehiclesSelected"
+    :dataVehical="listDataRentalOderCard"
+    :listTotalCost="listTotalCost"
+    :totalCost="totalCost"
+    :listDataVehicals="listVehiclesSelected"
   />
 </template>
 
@@ -191,19 +87,21 @@ import CheckoutPayment from "@/views/Checkout/CheckoutPayment.vue";
 import CarInformationCard from "@/components/stub/CarInformationCard.vue";
 import RenterInformationCard from "@/components/stub/RenterInformationCard.vue";
 import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
+import PaymentPriceCard from "@/components/stub/PaymentPriceCard.vue";
 import VehiclesService from "@/services/vehicles.service";
 import FormatDate from "@/utils/dateTime";
-import ConvertUtils from "@/utils/convertUtils";
 
 var store = useStore();
 var getStatusRes = computed(() => store.getters.getStatusResponse);
 var idUserCurrent = 1;
-var idVehical = 1;
 var mstBaseUser = ref<any[]>([]);
 var mstPaymentMethods = ref<any[]>([]);
 var getByIdVehicles = ref<any>(null);
+var listVehiclesSelected = ref<any[]>([]);
 var totalCost = ref<any>(0);
-var dataVehical = ref<any>(null);
+var listTotalCost = ref<any[]>([]);
+var listDataRentalOderCard = ref<any>(null);
+var listDataVehicals = ref<any[]>([]);
 var baseUserInfo = ref({
   accountId: null,
   baseId: null,
@@ -219,13 +117,15 @@ var baseUserInfo = ref({
 onMounted(async () => {
   await RentalOrderCartService.getAllRentalOrderCart({
     accountId: idUserCurrent,
-    vehicleId: idVehical,
     statusCart: 0,
   }).then(async (res: any) => {
-    dataVehical.value = [...res.mstRenOrdCart];
+    listDataRentalOderCard.value = [...res.mstRenOrdCart];
+    listDataVehicals.value = listDataRentalOderCard.value.map(
+      (ele: any) => ele.vehical
+    );
 
     await VehiclesService.getById({
-      vehicleId: dataVehical.value[0].vehical.vehicleId,
+      vehicleId: listDataRentalOderCard.value[0].vehical.vehicleId,
     }).then(async (res: any) => {
       getByIdVehicles.value = res.data.vehicles_list[0];
       await calculatorOptionIssurance();
@@ -248,33 +148,47 @@ function closeCheckOutPaymentDialog() {
   openDialog.value = false;
 }
 
-async function calculatorOptionIssurance() {
-  var numberDay: any = FormatDate.calculatorDay(
-    dataVehical.value[0].rentalOrderCart[0].rentalEndDate,
-    dataVehical.value[0].rentalOrderCart[0].rentalStartDate
+async function calculatorTotalCost(data: any) {
+  listVehiclesSelected.value = listDataRentalOderCard.value.filter(
+    (item1: any) =>
+      data.find((item2: any) => item2.vehicleId == item1.vehical.vehicleId)
   );
-  var totaOption: any = 0.0;
-  var totaIssurance: any = 0.0;
-  dataVehical.value[0].options.forEach((item: any) => {
-    totaOption += item.optionValue;
+  calculatorOptionIssurance();
+}
+async function calculatorOptionIssurance() {
+  totalCost.value = 0;
+  listTotalCost.value = [];
+  var sum = 0;
+  listVehiclesSelected.value.forEach((item: any) => {
+    var numberDay: any = FormatDate.calculatorDay(
+      item.rentalOrderCart[0].rentalEndDate,
+      item.rentalOrderCart[0].rentalStartDate
+    );
+    if (numberDay == 0) numberDay = 1;
+    var totaOption: any = 0.0;
+    var totaIssurance: any = 0.0;
+    item.options.forEach((item: any) => {
+      totaOption += item.optionValue;
+    });
+    item.insurances.forEach((item: any) => {
+      totaIssurance += item.insuranceValue;
+    });
+    sum = item.vehical.vehicleValue * numberDay + totaOption + totaIssurance;
+    totalCost.value += sum;
+    listTotalCost.value.push({ vehicleId: item.vehical.vehicleId, money: sum });
   });
-  dataVehical.value[0].insurances.forEach((item: any) => {
-    totaIssurance += item.insuranceValue;
-  });
-  totalCost.value =
-    getByIdVehicles.value.vehicleValue * numberDay + totaOption + totaIssurance;
 }
 
 // async function addOrderRenderCar() {
 //   var objectOrderDetail: any = [];
-//   dataVehical.options.forEach((item: any) => {
+//   listDataRentalOderCard.options.forEach((item: any) => {
 //     var object = {
-//       vehicleId: dataVehical.vehicleId,
+//       vehicleId: listDataRentalOderCard.vehicleId,
 //       optionId: item.optionId,
 //       quantity: 1,
 //       amount: 1,
-//       rentalStartDate: dataVehical.rentalStartDate,
-//       rentalEndDate: dataVehical.rentalEndDate,
+//       rentalStartDate: listDataRentalOderCard.rentalStartDate,
+//       rentalEndDate: listDataRentalOderCard.rentalEndDate,
 //     };
 //     objectOrderDetail.push(object);
 //   });
@@ -289,3 +203,5 @@ async function calculatorOptionIssurance() {
 //   console.log("add order rental successful!");
 // }
 </script>
+
+<style scoped lang="scss"></style>
