@@ -139,7 +139,6 @@ onMounted(async () => {
   await BaseService.getBaseUserInfo(idUserCurrent).then(async (res: any) => {
     mstBaseUser.value = [...res.mstBaseUser];
     console.log(mstBaseUser);
-    
   });
   await PaymentMethodsService.getAllPaymentMethod().then(async (res: any) => {
     mstPaymentMethods.value = [...res.mstPaymentMethods];
@@ -181,7 +180,10 @@ async function calculatorOptionIssurance() {
     item.insurances.forEach((item: any) => {
       totaIssurance += item.insuranceValue;
     });
-    sum = item.vehical.vehicleValue * Number(numberDay) + totaOption + totaIssurance;
+    sum =
+      item.vehical.vehicleValue * Number(numberDay) +
+      totaOption +
+      totaIssurance;
     totalCost.value += sum;
     listTotalCost.value.push({ vehicleId: item.vehical.vehicleId, money: sum });
   });
@@ -218,6 +220,4 @@ function filterUserInfo(newValue: any) {
 // }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

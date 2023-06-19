@@ -1,7 +1,6 @@
 import CONST from "@/services/_constant";
 import CarCartCustomerResponse from "@/interfaces/response/car-cart-response.model";
 import CarCartModelResponse from "@/interfaces/response/car-cart-response.model";
-import PaymentMethods from "@/interfaces/PaymentMethods";
 import apiClient from "./api.service";
 
 class CarCartService {
