@@ -148,13 +148,14 @@ function closeCheckOutPaymentDialog() {
   openDialog.value = false;
 }
 
-async function calculatorTotalCost(data: any) {
+async function calculatorTotalCost(data: any): Promise<void> {
   listVehiclesSelected.value = listDataRentalOderCard.value.filter(
     (item1: any) =>
       data.find((item2: any) => item2.vehicleId == item1.vehical.vehicleId)
   );
   calculatorOptionIssurance();
 }
+
 async function calculatorOptionIssurance() {
   totalCost.value = 0;
   listTotalCost.value = [];
@@ -177,6 +178,15 @@ async function calculatorOptionIssurance() {
     totalCost.value += sum;
     listTotalCost.value.push({ vehicleId: item.vehical.vehicleId, money: sum });
   });
+}
+
+function adb(): void {
+  var a = "625-553-3716";
+  var object = {
+    a1: a,
+    a2: a,
+    a3: {},
+  };
 }
 
 // async function addOrderRenderCar() {
@@ -204,4 +214,6 @@ async function calculatorOptionIssurance() {
 // }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+</style>
