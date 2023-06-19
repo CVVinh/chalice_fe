@@ -1,19 +1,69 @@
-import axios from "axios";
-import _CONFIG from "@/configs/_var";
+import CONST from "@/services/_constant";
 import InsuranceResponse from "@/interfaces/response/insurance-response.model";
+import apiClient from "./api.service";
 
 class InsuranceService {
-  /**
-   * データ取得都道府県
-   */
-  async getAll(dataParam?: object): Promise<InsuranceResponse> {
-    const response = await axios.get(
-      `${_CONFIG.API_URL}/func/get-isurance-list`,
-      {
-        params: dataParam,
-      }
-    );
-    return response as InsuranceResponse;
+  async getAllInsurance(dataParam?: object): Promise<InsuranceResponse> {
+    return await apiClient
+      .post(CONST.API.INSURANCE.LIST, { params: dataParam })
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
+  }
+
+  async getInsuranceInfo(id: number): Promise<InsuranceResponse> {
+    return await apiClient
+      .get(CONST.API.INSURANCE.DETAIL(id))
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
+  }
+
+  async addInsurance(dataParam: object): Promise<InsuranceResponse> {
+    return await apiClient
+      .post(CONST.API.INSURANCE.CREATE, { params: dataParam })
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
+  }
+
+  async addMultiInsurance(dataParam: object): Promise<InsuranceResponse> {
+    return await apiClient
+      .post(CONST.API.INSURANCE.CREATE_MULTI, { params: dataParam })
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
+  }
+
+  async updateInsurance(dataParam: object): Promise<InsuranceResponse> {
+    return await apiClient
+      .put(CONST.API.INSURANCE.UPDATE, { params: dataParam })
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
+  }
+
+  async deleteInsurance(id: number): Promise<InsuranceResponse> {
+    return await apiClient
+      .delete(CONST.API.INSURANCE.DELETE(id))
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
+  }
+
+  async deleteMultiInsurance(dataParam: object): Promise<InsuranceResponse> {
+    return await apiClient
+      .post(CONST.API.INSURANCE.DELETE_MULTI, { params: dataParam })
+      .then((response) => {
+        return response.data as InsuranceResponse;
+      })
+      .catch((error) => error.response);
   }
 }
 export default new InsuranceService();

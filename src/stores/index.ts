@@ -1,17 +1,23 @@
-import { InjectionKey } from 'vue'
-import { createStore, useStore as baseUseStore, Store } from 'vuex'
+import { InjectionKey } from "vue";
+import { createStore, useStore as baseUseStore, Store } from "vuex";
 
 export interface State {
-  message: string,
-  statusResponse: number | null
+  message: string;
+  statusResponse: number | null;
+  order: {
+      orderId: number | null,
+    },
 }
 
-export const key: InjectionKey<Store<State>> = Symbol()
+export const key: InjectionKey<Store<State>> = Symbol();
 
 export const store = createStore<State>({
   state: {
-    message: '',
-    statusResponse: null
+    message: "",
+    statusResponse: null,
+    order: {
+      orderId: null,
+    },
   },
   mutations: {
     setMessage(state, message) {
@@ -19,7 +25,10 @@ export const store = createStore<State>({
     },
     setStatusResponse(state, status) {
       state.statusResponse = status;
-    }
+    },
+    setOrder(state, newOrder) {
+      state.order = newOrder;
+  },
   },
   getters: {
     getMessage(state) {
@@ -27,17 +36,23 @@ export const store = createStore<State>({
     },
     getStatusResponse(state) {
       return state.statusResponse;
+    },
+    getOrder(state){
+      return state.order
     }
   },
   actions: {
-    setMessage({commit }, message) {
-      commit('setMessage', message);
+    setMessage({ commit }, message) {
+      commit("setMessage", message);
     },
     setStatusResponse({ commit }, status) {
-      commit('setStatusResponse', status);
+      commit("setStatusResponse", status);
+    },
+    setOrder({commit},Order){
+      commit("setOrder",Order)
     }
-  }
-})
-export function useStore () {
+  },
+});
+export function useStore() {
   return baseUseStore(key);
 }
