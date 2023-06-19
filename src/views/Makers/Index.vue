@@ -1,57 +1,110 @@
 <template>
   <div class="elevation-15">
-    <v-card-text>
-      <v-file-input
-        accept="image/*"
-        v-model="state.chosenFile"
-        label="Choose a file"
-        @change="handleFileChange($event)"
-      ></v-file-input> </v-card-text
-    ><v-card-text
-      ><img v-if="state.data" :src="state.data" alt=""
-    /></v-card-text>
-    <v-card-actions>
-      <v-spacer></v-spacer>
-      <v-btn right @click="importImage">Read File</v-btn>
-    </v-card-actions>
-
-    <v-card width="600" height="300" raised>
-      <v-card-title>File contents:</v-card-title>
-      <v-card-text><img v-if="data" alt="" /></v-card-text>
-    </v-card>
+    <v-content>
+      <v-container fill-height>
+        <v-row justify="center">
+          <v-col cols="auto">
+            <v-card width="600" height="300" raised>
+              <v-card-title>Ví dụ về v-file-input trong Vuetify:</v-card-title>
+              <br />
+              <v-card-text>
+                <v-file-input
+                  accept="image/*"
+                  label="Nhấp vào đây để chọn một hình ảnh"
+                  outlined
+                  v-model="chosenFile"
+                >
+                </v-file-input>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn right @click="importImage">Đọc File</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+          <v-col cols="auto">
+            <v-card width="600" height="300" raised>
+              <v-card-title>Nội dung File:</v-card-title>
+              <v-card-text>
+                <img v-if="imageUrl" :src="imageUrl" alt="" />
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="auto">
+            <v-card width="600" height="300" raised>
+              <v-card-title>Nội dung File:</v-card-title>
+              <v-card-text v-for="img in state.dataTable" :key="img.vehicleId">
+                <img :src="img.image" alt="" />
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-content>
   </div>
 </template>
 
-<script>
-import { computed, onMounted, watch, reactive } from "vue";
+<script setup lang="ts">
+import { ref, reactive, onMounted } from "vue";
+import VehiclesImageService from "@/services/vehicle_image.service";
+import VehiclesImage from "@/interfaces/Vehicles-image";
+import { log } from "console";
 
-export default {
-  setup() {
-    const state = reactive({
-      chosenFile: null,
-      data: null,
-    });
-    function handleFileChange(event) {
-      state.chosenFile = event.target.files[0];
-      console.log("state.chosenFile", state.chosenFile);
-    }
-    function importImage() {
-      const file = state.chosenFile;
-      if (file instanceof Blob) {
-        var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          state.data = reader.result;
-        };
-      } else {
-        console.error("Invalid file");
+const chosenFile = ref<File[]>([]);
+const imageUrl = ref<string | null>(null);
+
+const state = reactive({
+  dataTable: [] as VehiclesImage[],
+  totalRecords: 0,
+});
+const dataSearch = reactive({
+  vehicleId: null,
+  vehicleImageid: null,
+  pageNum: 1,
+  pageSize: 5,
+});
+
+const importImage = async (): Promise<void> => {
+  if (chosenFile.value) {
+    const file = chosenFile.value[0];
+    console.log("file", file);
+    const formData = new FormData();
+    formData.append("image", file);
+    console.log("formData", formData);
+
+    try {
+      const response = await VehiclesImageService.add(formData);
+      console.log("fetchData", response);
+      if (response && response.data) {
+        state.dataTable = response.data.vehicle_img_list;
       }
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    return {
-      state,
-      importImage,
-    };
-  },
+  // if (chosenFile.value) {
+  //   const fileReader = new FileReader();
+  //   fileReader.onload = () => {
+  //     imageUrl.value = fileReader.result as string;
+  //   };
+  //   fileReader.readAsDataURL(chosenFile.value[0]);
+  // }
+};
+
+onMounted(async () => {
+  // await addData();
+});
+
+const addData = async (): Promise<void> => {
+  try {
+    const response = await VehiclesImageService.add(dataSearch);
+    console.log("fetchData", response);
+    if (response && response.data) {
+      state.dataTable = response.data.vehicle_img_list;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 };
 </script>

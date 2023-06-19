@@ -1,11 +1,8 @@
 import Insurances from "../Insurances";
 
 export default interface InsuranceResponse {
-  data: {
-    message: string;
-    mstIsurances: Insurances[];
-    totalRecords: number;
-    status: number;
-  };
+  message: string;
+  mstIsurances: Insurances[];
+  total: number;
   status: number;
 }

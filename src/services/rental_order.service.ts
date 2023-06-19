@@ -18,14 +18,16 @@ class RentalOrderService {
       .catch(async (response:any) => {return response.response});
   }
 
-   async addRentalOrder(dataParam?: object ): Promise<RentalOrderResponse> {
+   async addRentalOrder(dataParam?: object): Promise<RentalOrderResponse> {
     return await apiClient
-      .post(CONST.API.RENTAL_ORDER.CREATE, { params: dataParam})
-      .then(async (response:any) => {
-        return await response.data as RentalOrderResponse
+      .post(CONST.API.RENTAL_ORDER.CREATE, dataParam)
+      .then(async (response: any) => {
+        return await response.data as RentalOrderResponse;
       })
-      .catch(async (response:any) => {return response.response});
-  }
+      .catch(async (response: any) => {
+        return response.response;
+      });
+}
 
 }
 

@@ -42,6 +42,7 @@
           <RenterInformationCard
             :mstBaseUser="mstBaseUser"
             :baseUserInfo="baseUserInfo"
+            @filterUserInfo="filterUserInfo($event)"
           />
         </v-sheet>
         <!-- payment method -->
@@ -50,7 +51,11 @@
         </v-sheet>
 
         <div class="d-flex mt-3 justify-end">
-          <v-btn color="primary" @click="openCheckOutPaymentDialog()">
+          <v-btn
+            color="primary"
+            @click="openCheckOutPaymentDialog()"
+            :disabled="listVehiclesSelected.length === 0"
+          >
             button open dropdown
           </v-btn>
         </div>
@@ -80,7 +85,7 @@
 import { ref, computed, onMounted, onBeforeMount } from "vue";
 import BaseService from "@/services/base.service";
 import RentalOrderService from "@/services/rental_order.service";
-import RentalOrderCartService from "@/services/rental_order_cart.service";
+import CarCartService from "@/services/car_cart.service";
 import PaymentMethodsService from "@/services/payment_method.service";
 import { useStore } from "@/stores";
 import CheckoutPayment from "@/views/Checkout/CheckoutPayment.vue";
@@ -115,7 +120,7 @@ var baseUserInfo = ref({
 });
 
 onMounted(async () => {
-  await RentalOrderCartService.getAllRentalOrderCart({
+  await CarCartService.getAllCarCart({
     accountId: idUserCurrent,
     statusCart: 0,
   }).then(async (res: any) => {
@@ -133,6 +138,8 @@ onMounted(async () => {
   });
   await BaseService.getBaseUserInfo(idUserCurrent).then(async (res: any) => {
     mstBaseUser.value = [...res.mstBaseUser];
+    console.log(mstBaseUser);
+    
   });
   await PaymentMethodsService.getAllPaymentMethod().then(async (res: any) => {
     mstPaymentMethods.value = [...res.mstPaymentMethods];
@@ -142,6 +149,7 @@ onMounted(async () => {
 let openDialog = ref(false);
 function openCheckOutPaymentDialog() {
   openDialog.value = true;
+  console.log(listDataVehicals.value);
 }
 
 function closeCheckOutPaymentDialog() {
@@ -160,11 +168,10 @@ async function calculatorOptionIssurance() {
   listTotalCost.value = [];
   var sum = 0;
   listVehiclesSelected.value.forEach((item: any) => {
-    var numberDay: any = FormatDate.calculatorDay(
-      item.rentalOrderCart[0].rentalEndDate,
-      item.rentalOrderCart[0].rentalStartDate
+    var numberDay: any = FormatDate.calculatorDayTimeByNumber(
+      item.rentalOrderCart[0].rentalStartDate,
+      item.rentalOrderCart[0].rentalEndDate
     );
-    if (numberDay == 0) numberDay = 1;
     var totaOption: any = 0.0;
     var totaIssurance: any = 0.0;
     item.options.forEach((item: any) => {
@@ -173,10 +180,16 @@ async function calculatorOptionIssurance() {
     item.insurances.forEach((item: any) => {
       totaIssurance += item.insuranceValue;
     });
-    sum = item.vehical.vehicleValue * numberDay + totaOption + totaIssurance;
+    sum = item.vehical.vehicleValue * Number(numberDay) + totaOption + totaIssurance;
     totalCost.value += sum;
     listTotalCost.value.push({ vehicleId: item.vehical.vehicleId, money: sum });
   });
+}
+
+function filterUserInfo(newValue: any) {
+  baseUserInfo.value = mstBaseUser.value.filter(
+    (ele: any) => ele.baseId == newValue
+  )[0];
 }
 
 // async function addOrderRenderCar() {
@@ -204,4 +217,6 @@ async function calculatorOptionIssurance() {
 // }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+
+</style>

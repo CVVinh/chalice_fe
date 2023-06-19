@@ -13,7 +13,7 @@
           id="inforUser"
           v-model="infoUserSelected"
           :items="mstBaseUser"
-          item-title="baseName"
+          item-title="address"
           item-value="baseId"
           no-data-text="Không có dữ liệu"
           variant="outlined"
@@ -23,6 +23,7 @@
         <label for="email"><b>Email</b> </label>
         <v-text-field
           id="email"
+          type="email"
           placeholder="Nhập địa chỉ email của bạn"
           variant="outlined"
           v-model="baseUserInfo.eMailAddress"
@@ -43,6 +44,7 @@
       <div>
         <label for="faxNumber"><b>Số fax</b> </label
         ><v-text-field
+          type="number"
           id="faxNumber"
           placeholder="Số fax"
           variant="outlined"
@@ -77,9 +79,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 
 var infoUserSelected = ref(null);
+const emit = defineEmits(["filterUserInfo"]);
+
 const props = defineProps({
   mstBaseUser: {
     type: Array,
@@ -124,10 +128,12 @@ onMounted(() => {
       props.infomationUserInCheckOut.telephoneNumber;
   }
 });
-// watch(infoUserSelected, (newValue) => {
-//   baseUserInfo.value = props.mstBaseUser.filter(
-//     (ele: any) => ele.baseId == newValue
-//   )[0];
-//   console.log(baseUserInfo);
-// });
+watch(infoUserSelected, (newValue) => {
+  // props.baseUserInfo.value = props.mstBaseUser.filter(
+  //   (ele: any) => ele.baseId == newValue
+  // )[0];
+  emit("filterUserInfo", newValue);
+});
 </script>
+<style scoped lang="scss">
+</style>

@@ -295,7 +295,7 @@ import Options from "@/interfaces/Options";
 import OptionService from "@/services/options.service";
 import Insurances from "@/interfaces/Insurances";
 import InsuranceService from "@/services/insurances.service";
-import RentalOrderCartService from "@/services/rental_order_cart.service"
+import CarCartService from "@/services/car_cart.service"
 import { Exception } from 'sass';
 import { useRouter } from "vue-router";
 
@@ -362,10 +362,9 @@ const getData = async (data: object) => {
 // Get list of options save to state.dataOption
 const getDataOption = async () => {
   try {
-    const response = await OptionService.getAll();
-    if (response && response.data) {
-      state.dataOption = response.data.mstOptions;
-    }
+    await OptionService.getAllOptions().then( async (res) => {
+      state.dataOption = [...res.mstOptions];
+    });
   } catch (error) {
     console.log(error);
   }
@@ -374,10 +373,9 @@ const getDataOption = async () => {
 // Get list of insurances save to state.dataOption
 const getDataInsurance = async () => {
   try {
-    const response = await InsuranceService.getAll();
-    if (response && response.data) {
-      state.dataInsurance = response.data.mstIsurances;
-    }
+   await InsuranceService.getAllInsurance().then( async (res) => {
+      state.dataInsurance = [...res.mstIsurances];
+    });
   } catch (error) {
     console.log(error);
   }
@@ -517,7 +515,7 @@ const clickBookACar = async () => {
         };
       oderCards.push(oderCard)
     } 
-    await RentalOrderCartService.addMultiRentalOrderCart(oderCards);
+    await CarCartService.addMultiCarCart(oderCards);
     state.status = true
     state.successMessage = 'Đặt xe thành công!';
     router.push('/payment_management');

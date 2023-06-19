@@ -71,6 +71,8 @@ import RenterInformationCard from "@/components/stub/RenterInformationCard.vue";
 import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
 import PaymentPriceCard from "@/components/stub/PaymentPriceCard.vue";
 import { useRouter } from "vue-router";
+import rental_orderService from "@/services/rental_order.service";
+import { useStore } from "@/stores/index";
 
 export default {
   props: [
@@ -80,6 +82,7 @@ export default {
     "dataVehical",
     "totalCost",
     "listDataVehicals",
+    "listTotalCost",
   ],
   components: {
     CarInformationCard,
@@ -90,12 +93,77 @@ export default {
   setup(props, { emit }) {
     const router = useRouter();
     const phone = ref(null);
-
+    const store = useStore();
     const closeDialog = () => {
       emit("closeDialog");
     };
     function CheckOut() {
-      console.log("This is data", props.listDataVehicals);
+      let details = [];
+      let cartOrder = [];
+      for (let index = 0; index < props.listDataVehicals.length; index++) {
+        const element = props.listDataVehicals[index];
+
+        const orderDetails = {
+          vehicleId: null,
+          optionId: null,
+          insuranceId: null,
+          quantity: null,
+          amount: null,
+          rentalStartDate: null,
+          rentalEndDate: null,
+        };
+
+        const price = props.listTotalCost.find(
+          (x) => x.vehicleId === element.vehical.vehicleId
+        );
+        orderDetails.amount = price.money;
+
+        orderDetails.vehicleId = element.vehical.vehicleId;
+
+        const optionIds = element.options.map((option) => option.optionId);
+        orderDetails.optionId = optionIds.join(",");
+
+        const insuranceIds = element.insurances.map(
+          (insurance) => insurance.insuranceId
+        );
+        orderDetails.insuranceId = insuranceIds.join(",");
+        //dang gan tam
+        orderDetails.quantity = 1;
+        orderDetails.rentalStartDate =
+          element.rentalOrderCart[0].rentalStartDate;
+        orderDetails.rentalEndDate = element.rentalOrderCart[0].rentalEndDate;
+
+        const rentalOrderIds = element.rentalOrderCart.map(
+          (cartItem) => cartItem.rentalOrdersCartId
+        );
+        cartOrder.push(...rentalOrderIds);
+
+        details.push(orderDetails);
+      }
+
+      const order = {
+        totalAmount: props.totalCost,
+        paymentMethodId: 1,
+        rentalStatus: 1,
+        details: details,
+        cartOrders: cartOrder,
+      };
+      rental_orderService
+        .addRentalOrder(order)
+        .then((res) => {
+          const orderId = res.message.data;
+          const updateOrder = () => {
+            const newOrder = {
+              orderId: orderId,
+            };
+            store.dispatch("setOrder", newOrder);
+          };
+          updateOrder();
+          router.push("/paymentsuccess");
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
     return {

@@ -1,9 +1,9 @@
-import VehicleImage from "../Vehicle-image";
+import VehicleImage from "../Vehicles-image";
 
 export default interface VehicleImageResponse {
   data: {
     message: string;
-    image_list: VehicleImage[];
+    vehicle_img_list: VehicleImage[];
     totalRecords: number;
     status: number;
   };

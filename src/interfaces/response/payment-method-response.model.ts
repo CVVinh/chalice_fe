@@ -1,7 +1,8 @@
 import PaymentMethods from "../PaymentMethods";
 
 export default interface PaymentMethodsResponse {
-  msg: string;
+  message: string;
   mstPaymentMethods: PaymentMethods[];
   total: number;
+  status: number;
 }
