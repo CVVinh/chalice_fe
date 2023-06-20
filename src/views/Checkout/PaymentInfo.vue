@@ -153,6 +153,7 @@ async function calculatorTotalCost(data: any) {
   );
   //calculatorOptionIssurance();
 }
+
 async function calculatorOptionIssurance() {
   totalCost.value = 0;
   listTotalCost.value = [];
