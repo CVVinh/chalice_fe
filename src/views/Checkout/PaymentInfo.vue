@@ -31,7 +31,6 @@
         <!-- car information ordered  -->
         <v-sheet class="mb-5">
           <CarInformationCard
-            :getByIdVehicles="getByIdVehicles"
             :listDataVehicals="listDataVehicals"
             @arrVehicalSelected="calculatorTotalCost($event)"
           />
@@ -98,10 +97,9 @@ import FormatDate from "@/utils/dateTime";
 
 var store = useStore();
 var getStatusRes = computed(() => store.getters.getStatusResponse);
-var idUserCurrent = 1;
+var idUserCurrent = 2;
 var mstBaseUser = ref<any[]>([]);
 var mstPaymentMethods = ref<any[]>([]);
-var getByIdVehicles = ref<any>(null);
 var listVehiclesSelected = ref<any[]>([]);
 var totalCost = ref<any>(0);
 var listTotalCost = ref<any[]>([]);
@@ -124,22 +122,14 @@ onMounted(async () => {
     accountId: idUserCurrent,
     statusCart: 0,
   }).then(async (res: any) => {
-    listDataRentalOderCard.value = [...res.mstRenOrdCart];
+    listDataRentalOderCard.value = [...res.carCartList];
+    
     listDataVehicals.value = listDataRentalOderCard.value.map(
-      (ele: any) => ele.vehical
+      (ele: any) => ele.vehicles
     );
-
-    await VehiclesService.getById({
-      vehicleId: listDataRentalOderCard.value[0].vehical.vehicleId,
-    }).then(async (res: any) => {
-      getByIdVehicles.value = res.data.vehicles_list[0];
-      await calculatorOptionIssurance();
-    });
   });
   await BaseService.getBaseUserInfo(idUserCurrent).then(async (res: any) => {
     mstBaseUser.value = [...res.mstBaseUser];
-    console.log(mstBaseUser);
-    
   });
   await PaymentMethodsService.getAllPaymentMethod().then(async (res: any) => {
     mstPaymentMethods.value = [...res.mstPaymentMethods];
@@ -149,7 +139,6 @@ onMounted(async () => {
 let openDialog = ref(false);
 function openCheckOutPaymentDialog() {
   openDialog.value = true;
-  console.log(listDataVehicals.value);
 }
 
 function closeCheckOutPaymentDialog() {
@@ -157,11 +146,12 @@ function closeCheckOutPaymentDialog() {
 }
 
 async function calculatorTotalCost(data: any) {
+  
   listVehiclesSelected.value = listDataRentalOderCard.value.filter(
     (item1: any) =>
-      data.find((item2: any) => item2.vehicleId == item1.vehical.vehicleId)
+      data.find((item2: any) => item2.vehicleId == item1.vehicleId)
   );
-  calculatorOptionIssurance();
+  //calculatorOptionIssurance();
 }
 async function calculatorOptionIssurance() {
   totalCost.value = 0;
@@ -180,7 +170,10 @@ async function calculatorOptionIssurance() {
     item.insurances.forEach((item: any) => {
       totaIssurance += item.insuranceValue;
     });
-    sum = item.vehical.vehicleValue * Number(numberDay) + totaOption + totaIssurance;
+    sum =
+      item.vehical.vehicleValue * Number(numberDay) +
+      totaOption +
+      totaIssurance;
     totalCost.value += sum;
     listTotalCost.value.push({ vehicleId: item.vehical.vehicleId, money: sum });
   });
@@ -191,6 +184,7 @@ function filterUserInfo(newValue: any) {
     (ele: any) => ele.baseId == newValue
   )[0];
 }
+
 
 // async function addOrderRenderCar() {
 //   var objectOrderDetail: any = [];
@@ -217,6 +211,4 @@ function filterUserInfo(newValue: any) {
 // }
 </script>
 
-<style scoped lang="scss">
-
-</style>
+<style scoped lang="scss"></style>

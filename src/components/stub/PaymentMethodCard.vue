@@ -56,6 +56,7 @@
               <p style="color: red">*</p></b
             > </label
           ><v-text-field
+            type="number"
             id="cardNumber"
             placeholder="Nhập Số Thẻ"
             variant="outlined"

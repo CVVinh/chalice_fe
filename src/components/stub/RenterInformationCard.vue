@@ -28,6 +28,7 @@
           variant="outlined"
           v-model="baseUserInfo.eMailAddress"
           :readonly="isOpen === true"
+          :rules="rulesEmail"
         >
         </v-text-field>
       </div>
@@ -39,6 +40,7 @@
           variant="outlined"
           v-model="baseUserInfo.address"
           :readonly="isOpen === true"
+          :rules="[!!baseUserInfo.address || `This field is required.`]"
         ></v-text-field>
       </div>
       <div>
@@ -50,6 +52,7 @@
           variant="outlined"
           v-model="baseUserInfo.faxNumber"
           :readonly="isOpen === true"
+          :rules="rulesNumberFax"
         ></v-text-field>
       </div>
       <div>
@@ -129,11 +132,37 @@ onMounted(() => {
   }
 });
 watch(infoUserSelected, (newValue) => {
-  // props.baseUserInfo.value = props.mstBaseUser.filter(
-  //   (ele: any) => ele.baseId == newValue
-  // )[0];
   emit("filterUserInfo", newValue);
 });
+
+const rulesEmail: any = computed((value) => {
+  var result: Array<string> = [];
+  var require: any = (value: string) => {
+    return !!value || `This field is required.`;
+  };
+  result.push(require);
+  var email: any = (value: string) => {
+    return (
+      (value && /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(value)) ||
+      `Invalid email.`
+    );
+  };
+  result.push(email);
+  return result;
+});
+
+const rulesNumberFax: any = computed(() => {
+  var result: Array<string> = [];
+  var require: any = (value: string) => {
+    return !!value || `This field is required.`;
+  };
+  result.push(require);
+  var maxLength: any = (value: string) => {
+    return (value && /^[0-9]{0,10}$/.test(value)) || `Fax number is too long.`;
+  };
+  result.push(maxLength);
+  return result;
+});
+
 </script>
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

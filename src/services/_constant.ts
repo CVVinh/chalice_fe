@@ -57,7 +57,8 @@ const CONST = {
             CREATE: `/rentalOrder`,
         },
         CAR_CART: {
-            LIST: `/func/get-car-cart-list`,
+            //LIST: `/func/get-car-cart-list`,
+            LIST: `/func/get-list-car-cart`,
             DETAIL: `/func/get-car-cart-info`,
             CREATE: `/func/add-car-cart`,
             CREATE_MULTI: `/func/add-multi-car-cart`,

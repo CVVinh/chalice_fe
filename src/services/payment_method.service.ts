@@ -9,28 +9,28 @@ class PaymentMethodsService {
   ): Promise<PaymentMethodsResponse> {
     return await apiClient
       .post(CONST.API.PAYMENT_METHOD.LIST, { params: dataParam })
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 
   async getPaymentMethodInfo(id: number): Promise<PaymentMethodsResponse> {
     return await apiClient
       .get(CONST.API.PAYMENT_METHOD.DETAIL(id))
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 
   async addPaymentMethod(dataParam: object): Promise<PaymentMethodsResponse> {
     return await apiClient
       .post(CONST.API.PAYMENT_METHOD.CREATE, { params: dataParam })
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 
   async addMultiPaymentMethod(
@@ -38,10 +38,10 @@ class PaymentMethodsService {
   ): Promise<PaymentMethodsResponse> {
     return await apiClient
       .post(CONST.API.PAYMENT_METHOD.CREATE_MULTI, { params: dataParam })
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 
   async updatePaymentMethod(
@@ -50,19 +50,19 @@ class PaymentMethodsService {
   ): Promise<PaymentMethodsResponse> {
     return await apiClient
       .put(CONST.API.PAYMENT_METHOD.UPDATE(id), { params: dataParam })
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 
   async deletePaymentMethod(id: number): Promise<PaymentMethodsResponse> {
     return await apiClient
       .put(CONST.API.PAYMENT_METHOD.DELETE(id))
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 
   async deleteMultiPaymentMethod(
@@ -70,10 +70,10 @@ class PaymentMethodsService {
   ): Promise<PaymentMethodsResponse> {
     return await apiClient
       .put(CONST.API.PAYMENT_METHOD.DELETE_MULTI, { params: dataParam })
-      .then((response) => {
+      .then((response: any) => {
         return response.data as PaymentMethodsResponse;
       })
-      .catch((error) => error.response);
+      .catch((error: any) => error.response);
   }
 }
 

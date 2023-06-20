@@ -15,7 +15,7 @@
           <v-sheet class="elevation-5 rounded-xl pa-6">
             <v-row class="text-h4 font-weight-bold mt-5 ml-3 mb-5">
               <v-row>
-                <span class="">{{ item.vehical.vehicleName }}</span>
+                <span class="">{{ item.vehicles.vehicleName }}</span>
               </v-row>
             </v-row>
             <v-row class="text-h5">
@@ -25,9 +25,10 @@
                   <p>
                     {{
                       ConvertUtils.convertNumberToVnCurrency(
-                        item.vehical.vehicleValue
+                        item.vehicles.vehicleValue
                       )
-                    }} / giờ
+                    }}
+                    / giờ
                   </p>
 
                   <!-- <small>290.800</small> -->
@@ -89,13 +90,13 @@
                   <b
                     >{{
                       FormatDate.formatDateTimeWithValue(
-                        new Date(item.rentalOrderCart[0].rentalStartDate)
+                        new Date(item.rentalStartDate)
                       )
                     }}
                     -
                     {{
                       FormatDate.formatDateTimeWithValue(
-                        new Date(item.rentalOrderCart[0].rentalEndDate)
+                        new Date(item.rentalEndDate)
                       )
                     }}
                   </b>
@@ -103,22 +104,13 @@
                 <p>
                   Tổng:
                   <b>
-                    {{
-                      FormatDate.calculatorDayTimePrint(
-                        item.rentalOrderCart[0].rentalStartDate,
-                        item.rentalOrderCart[0].rentalEndDate
-                      )
-                    }}
+                    {{ item.totalHour }} h
                   </b>
                 </p>
               </v-col>
               <v-col class="d-flex justify-end mt-1" cols="12">
                 <p>
-                  {{
-                    ConvertUtils.convertNumberToVnCurrency(
-                      filterMoney(item.vehical.vehicleId)
-                    )
-                  }}
+                  {{ ConvertUtils.convertNumberToVnCurrency(item.totalCost) }}
                 </p>
               </v-col>
             </v-row>
@@ -146,7 +138,8 @@
                       ConvertUtils.convertNumberToVnCurrency(
                         item.vehical.vehicleValue
                       )
-                    }} / giờ
+                    }}
+                    / giờ
                   </p>
 
                   <!-- <small>290.800</small> -->
@@ -209,13 +202,13 @@
                   <b
                     >{{
                       FormatDate.formatDateTimeWithValue(
-                        new Date(item.rentalOrderCart[0].rentalStartDate)
+                        new Date(item.rentalStartDate)
                       )
                     }}
                     -
                     {{
                       FormatDate.formatDateTimeWithValue(
-                        new Date(item.rentalOrderCart[0].rentalEndDate)
+                        new Date(item.rentalEndDate)
                       )
                     }}
                   </b>
@@ -225,8 +218,8 @@
                   <b>
                     {{
                       FormatDate.calculatorDayTimePrint(
-                        item.rentalOrderCart[0].rentalStartDate,
-                        item.rentalOrderCart[0].rentalEndDate
+                        item.rentalStartDate,
+                        item.rentalEndDate
                       )
                     }}
                   </b>
@@ -238,8 +231,8 @@
                     ConvertUtils.convertNumberToVnCurrency(
                       item.carPrice *
                         FormatDate.calculatorDayTimeByNumber(
-                          item.rentalOrderCart[0].rentalStartDate,
-                          item.rentalOrderCart[0].rentalEndDate
+                          item.rentalStartDate,
+                          item.rentalEndDate
                         ) +
                         item.optionsPrice
                     )

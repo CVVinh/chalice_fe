@@ -66,29 +66,38 @@ const dataSearch = reactive({
 
 const importImage = async (): Promise<void> => {
   if (chosenFile.value) {
-    const file = chosenFile.value[0];
-    console.log("file", file);
-    const formData = new FormData();
-    formData.append("image", file);
-    console.log("formData", formData);
+    const fileReader = new FileReader();
+    fileReader.onload = async () => {
+      imageUrl.value = fileReader.result as string;
+      console.log("imageUrl", imageUrl.value);
 
-    try {
-      const response = await VehiclesImageService.add(formData);
-      console.log("fetchData", response);
-      if (response && response.data) {
-        state.dataTable = response.data.vehicle_img_list;
+      try {
+        const payload = {
+          image: imageUrl.value,
+          imagePath: imageUrl.value,
+        };
+
+        const response = await VehiclesImageService.add(payload);
+        console.log("fetchData", response);
+        if (response && response.data) {
+          state.dataTable = response.data.vehicle_img_list;
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
-    }
+    };
+    fileReader.readAsDataURL(chosenFile.value[0]);
+    console.log("chosenFile", chosenFile.value[0]);
   }
 
   // if (chosenFile.value) {
   //   const fileReader = new FileReader();
   //   fileReader.onload = () => {
   //     imageUrl.value = fileReader.result as string;
+  //     console.log("imageUrl", imageUrl.value);
   //   };
   //   fileReader.readAsDataURL(chosenFile.value[0]);
+  //   console.log("chosenFile", chosenFile.value[0]);
   // }
 };
 
