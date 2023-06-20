@@ -30,7 +30,6 @@
                     }}
                     / giờ
                   </p>
-
                   <!-- <small>290.800</small> -->
                 </span>
               </v-col>
@@ -126,7 +125,7 @@
           <v-sheet class="elevation-5 rounded-xl pa-6">
             <v-row class="text-h4 font-weight-bold mt-5 ml-3 mb-5">
               <v-row>
-                <span class="">{{ item.vehical.vehicleName }} </span>
+                <span class="">{{ item.vehicles.vehicleName }} </span>
               </v-row>
             </v-row>
             <v-row class="text-h5">
@@ -136,12 +135,11 @@
                   <p>
                     {{
                       ConvertUtils.convertNumberToVnCurrency(
-                        item.vehical.vehicleValue
+                        item.vehicles.vehicleValue
                       )
                     }}
                     / giờ
                   </p>
-
                   <!-- <small>290.800</small> -->
                 </span>
               </v-col>
@@ -216,27 +214,13 @@
                 <p>
                   Tổng:
                   <b>
-                    {{
-                      FormatDate.calculatorDayTimePrint(
-                        item.rentalStartDate,
-                        item.rentalEndDate
-                      )
-                    }}
+                    {{ item.totalHour }} h
                   </b>
                 </p>
               </v-col>
               <v-col class="d-flex justify-end mt-1" cols="12">
                 <p>
-                  {{
-                    ConvertUtils.convertNumberToVnCurrency(
-                      item.carPrice *
-                        FormatDate.calculatorDayTimeByNumber(
-                          item.rentalStartDate,
-                          item.rentalEndDate
-                        ) +
-                        item.optionsPrice
-                    )
-                  }}
+                  {{ ConvertUtils.convertNumberToVnCurrency(item.totalCost) }}
                 </p>
               </v-col>
             </v-row>
@@ -282,39 +266,33 @@ import FormatDate from "@/utils/dateTime";
 export default defineComponent({
   props: [
     "listVehiclesSelected",
-    "listTotalCost",
     "totalCost",
     "isOpen",
-    "dataVehicalInCheckOut",
-    "infomationCarInCheckOut",
     "totalCostInCheckOut",
     "listVehicleInCheckOut",
   ],
   setup(props) {
-    onMounted(() => {
-      if (props.isOpen) {
-        props.listVehicleInCheckOut.forEach((element: any) => {
-          let optionsPrice = 0;
-          let carPrice = 0;
-          carPrice = element.vehical.vehicleValue;
-          element.carPrice = carPrice;
-          element.insurances.forEach((insu: any) => {
-            optionsPrice += insu.insuranceValue;
-          });
+    // onMounted(() => {
+    //   if (props.isOpen) {
+    //     props.listVehicleInCheckOut.forEach((element: any) => {
+    //       let optionsPrice = 0;
+    //       let carPrice = 0;
+    //       carPrice = element.vehicleValue;
+    //       element.carPrice = carPrice;
+    //       element.insurances.forEach((insu: any) => {
+    //         optionsPrice += insu.insuranceValue;
+    //       });
 
-          element.options.forEach((opt: any) => {
-            optionsPrice += opt.optionValue;
-          });
+    //       element.options.forEach((opt: any) => {
+    //         optionsPrice += opt.optionValue;
+    //       });
 
-          element.optionsPrice = optionsPrice;
-        });
-      }
-    });
-    function filterMoney(id: any) {
-      return props.listTotalCost.filter((item: any) => item.vehicleId == id)[0]
-        .money;
-    }
-    return { ConvertUtils, FormatDate, filterMoney };
+    //       element.optionsPrice = optionsPrice;
+    //     });
+    //   }
+    // });
+   
+    return { ConvertUtils, FormatDate };
   },
 });
 </script>

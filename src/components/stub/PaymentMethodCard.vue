@@ -26,6 +26,7 @@
           item-value="paymentMethodId"
           no-data-text="Không có dữ liệu"
           variant="outlined"
+          :rules="[!!paymentMethodSelected || `Payment method is required.`]"
         ></v-select>
       </div>
       <div v-if="paymentMethodSelected == 1">
@@ -113,6 +114,5 @@ const props = defineProps({
 });
 
 watch(paymentMethodSelected, (newValue) => {
-  console.log(newValue);
 });
 </script>

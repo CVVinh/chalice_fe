@@ -41,8 +41,6 @@
                 <v-sheet class="pa-2 ma-2">
                   <payment-price-card
                     :isOpen="this.isOpen"
-                    :dataVehicalInCheckOut="dataVehical"
-                    :infomationCarInCheckOut="listVehiclesSelected"
                     :totalCostInCheckOut="totalCost"
                     :listVehicleInCheckOut="listDataVehicals"
                   />
@@ -79,10 +77,8 @@ export default {
     "isOpen",
     "baseUserInfo",
     "listVehiclesSelected",
-    "dataVehical",
     "totalCost",
     "listDataVehicals",
-    "listTotalCost",
   ],
   components: {
     CarInformationCard,
@@ -113,12 +109,9 @@ export default {
           rentalEndDate: null,
         };
 
-        const price = props.listTotalCost.find(
-          (x) => x.vehicleId === element.vehical.vehicleId
-        );
-        orderDetails.amount = price.money;
+        orderDetails.amount = element.totalCost;
 
-        orderDetails.vehicleId = element.vehical.vehicleId;
+        orderDetails.vehicleId = element.vehicles.vehicleId;
 
         const optionIds = element.options.map((option) => option.optionId);
         orderDetails.optionId = optionIds.join(",");
@@ -130,8 +123,8 @@ export default {
         //dang gan tam
         orderDetails.quantity = 1;
         orderDetails.rentalStartDate =
-          element.rentalOrderCart[0].rentalStartDate;
-        orderDetails.rentalEndDate = element.rentalOrderCart[0].rentalEndDate;
+          element.rentalStartDate;
+        orderDetails.rentalEndDate = element.rentalEndDate;
 
         const rentalOrderIds = element.rentalOrderCart.map(
           (cartItem) => cartItem.rentalOrdersCartId

@@ -40,7 +40,7 @@
                 </div>
                 <div style="padding: 0.5rem 1rem" class="d-flex align-center">
                   <v-icon icon="mdi mdi-bag-carry-on" />
-                  <p class="ml-3">{{ item.mileage }}</p>
+                  <p class="ml-3">{{ item.mileage }} km</p> 
                 </div>
               </div>
             </div>

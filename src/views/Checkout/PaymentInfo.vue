@@ -62,7 +62,6 @@
       <v-col cols="4" xs="12">
         <payment-price-card
           :listVehiclesSelected="listVehiclesSelected"
-          :listTotalCost="listTotalCost"
           :totalCost="totalCost"
         />
       </v-col>
@@ -73,8 +72,6 @@
     @closeDialog="closeCheckOutPaymentDialog()"
     :baseUserInfo="baseUserInfo"
     :listVehiclesSelected="listVehiclesSelected"
-    :dataVehical="listDataRentalOderCard"
-    :listTotalCost="listTotalCost"
     :totalCost="totalCost"
     :listDataVehicals="listVehiclesSelected"
   />
@@ -92,8 +89,6 @@ import CarInformationCard from "@/components/stub/CarInformationCard.vue";
 import RenterInformationCard from "@/components/stub/RenterInformationCard.vue";
 import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
 import PaymentPriceCard from "@/components/stub/PaymentPriceCard.vue";
-import VehiclesService from "@/services/vehicles.service";
-import FormatDate from "@/utils/dateTime";
 
 var store = useStore();
 var getStatusRes = computed(() => store.getters.getStatusResponse);
@@ -102,7 +97,6 @@ var mstBaseUser = ref<any[]>([]);
 var mstPaymentMethods = ref<any[]>([]);
 var listVehiclesSelected = ref<any[]>([]);
 var totalCost = ref<any>(0);
-var listTotalCost = ref<any[]>([]);
 var listDataRentalOderCard = ref<any>(null);
 var listDataVehicals = ref<any[]>([]);
 var baseUserInfo = ref({
@@ -123,7 +117,6 @@ onMounted(async () => {
     statusCart: 0,
   }).then(async (res: any) => {
     listDataRentalOderCard.value = [...res.carCartList];
-    
     listDataVehicals.value = listDataRentalOderCard.value.map(
       (ele: any) => ele.vehicles
     );
@@ -146,37 +139,17 @@ function closeCheckOutPaymentDialog() {
 }
 
 async function calculatorTotalCost(data: any) {
-  
   listVehiclesSelected.value = listDataRentalOderCard.value.filter(
     (item1: any) =>
       data.find((item2: any) => item2.vehicleId == item1.vehicleId)
   );
-  //calculatorOptionIssurance();
+  calculatorOptionIssurance();
 }
 
 async function calculatorOptionIssurance() {
   totalCost.value = 0;
-  listTotalCost.value = [];
-  var sum = 0;
   listVehiclesSelected.value.forEach((item: any) => {
-    var numberDay: any = FormatDate.calculatorDayTimeByNumber(
-      item.rentalOrderCart[0].rentalStartDate,
-      item.rentalOrderCart[0].rentalEndDate
-    );
-    var totaOption: any = 0.0;
-    var totaIssurance: any = 0.0;
-    item.options.forEach((item: any) => {
-      totaOption += item.optionValue;
-    });
-    item.insurances.forEach((item: any) => {
-      totaIssurance += item.insuranceValue;
-    });
-    sum =
-      item.vehical.vehicleValue * Number(numberDay) +
-      totaOption +
-      totaIssurance;
-    totalCost.value += sum;
-    listTotalCost.value.push({ vehicleId: item.vehical.vehicleId, money: sum });
+    totalCost.value  += item.totalCost
   });
 }
 
