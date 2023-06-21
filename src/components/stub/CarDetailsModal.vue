@@ -2,292 +2,334 @@
   <v-card>
     <div class="header">
       <div class="icon">
-        <span class="mdi mdi-close-circle-outline mdi-48px" v-on:click="ClickCarDetail"></span> 
-      </div>              
+        <span
+          class="mdi mdi-close-circle-outline mdi-48px"
+          v-on:click="ClickCarDetail"
+        ></span>
+      </div>
     </div>
-    <hr>
+    <hr />
     <v-form>
-      <div 
-        v-for="item in state.dataDetail"
-        :key="item.vehicleId"
-      >
-      <v-container>           
-        <v-row class="image">
-          <v-col>
-            <v-img class="image-left" cover
-              src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-            ></v-img>
-          </v-col>
-          <v-col>
-            <div class="image-right image-margin">
-              <v-img  
+      <div v-for="item in state.dataDetail" :key="item.vehicleId">
+        <v-container>
+          <v-row class="image">
+            <v-col>
+              <v-img
+                class="image-left"
                 cover
                 src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-            ></v-img> 
-            </div>
-            <div class="image-right image-margin">
-              <v-img  
-                cover
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              >
-              </v-img> 
-            </div>
-            <div class="image-right">
-              <v-img  
-                cover
-                src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
-              ></v-img> 
-            </div>
-          </v-col>
-        </v-row>              
-      </v-container>
-      <v-container>
-        <div class="body" v-for="store in item.stores_list" :key="store.storeId">
-          <v-col cols="8" class="body-left">
-            <v-row>
-              <h1 class="text-uppercase">{{ item.vehicleName }}</h1>                  
-            </v-row>
-            <v-row>
-              <v-col cols="2" v-if="item.vehicleRating">
-                <h2 class="text-row-1">
-                  <span class="mdi mdi-star"></span>
-                  {{ item.vehicleRating }}
-                </h2>
-              </v-col>
-              <v-col cols="3" v-if="item.mileage">                                 
-                <h2 class="text-row-1">
-                  <span class="mdi mdi-wallet-travel"></span>
-                  {{ item.mileage }} Dặm
-                </h2>
-              </v-col>
-              <v-col v-if="store.storeName">
-                <h2 class="text-row-1">
-                  <span class="mdi mdi-map-marker"></span>
-                  {{ store.storeName }}
-                </h2>
-              </v-col>
-            </v-row>
-            <hr>
-            <v-row>
-              <h1 class="text-header">Đặc điểm</h1>                  
-            </v-row>
-            <v-row>
-              <span v-if="item.vehicleSeat"><Icon icon="ic:baseline-chair"/></span>
-              <v-col cols="2" v-if="item.vehicleSeat">
-                <h4>Số ghế</h4>
-                <h2 class="characteristic">{{ item.vehicleSeat }} Ghế</h2>
-              </v-col>
-              <span v-if="item.vehicleEngine"><Icon icon="arcticons:automation"/></span>
-              <v-col cols="3" v-if="item.vehicleEngine">
-                <h4>Truyền động</h4>
-                <h2 class="characteristic">{{ item.vehicleEngine }}</h2>
-              </v-col>
-              <span><Icon icon="mdi:gasoline" /></span>
-              <v-col cols="2">
-                <h4>Nhiên liệu</h4>
-                <h2 class="characteristic">Xăng</h2>
-              </v-col>
-              <span v-if="item.vehicleConsumedEnergy"><Icon icon="mdi:motor" /></span>
-              <v-col cols="4" v-if="item.vehicleConsumedEnergy">
-                <h4>Năng lượng tiêu hao</h4>
-                <h2 class="characteristic">{{ item.vehicleConsumedEnergy }}/100km</h2>
-              </v-col>
-            </v-row>
-            <hr>
-            <v-row>
-              <h1 class="text-header">Mô tả</h1>
-            </v-row>
-            <v-row>
-              <h2 class="describe">{{ item.vehicleDescribe }}</h2>
-            </v-row>
-            <hr>
-            <v-row>
-              <h1 class="text-header">Điều khoản</h1>
-            </v-row>
-            <v-row>
-              <div class="rules">
-                <div>
-                  <h2>Quy định khác: </h2>
+              ></v-img>
+            </v-col>
+            <v-col>
+              <div class="image-right image-margin">
+                <v-img
+                  cover
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                ></v-img>
+              </div>
+              <div class="image-right image-margin">
+                <v-img
+                  cover
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                >
+                </v-img>
+              </div>
+              <div class="image-right">
+                <v-img
+                  cover
+                  src="https://cdn.vuetifyjs.com/images/parallax/material.jpg"
+                ></v-img>
+              </div>
+            </v-col>
+          </v-row>
+        </v-container>
+        <v-container>
+          <div
+            class="body"
+            v-for="store in item.stores_list"
+            :key="store.storeId"
+          >
+            <v-col cols="8" class="body-left">
+              <v-row>
+                <h1 class="text-uppercase">{{ item.vehicleName }}</h1>
+              </v-row>
+              <v-row>
+                <v-col cols="2" v-if="item.vehicleRating">
+                  <h2 class="text-row-1">
+                    <span class="mdi mdi-star"></span>
+                    {{ item.vehicleRating }}
+                  </h2>
+                </v-col>
+                <v-col cols="3" v-if="item.mileage">
+                  <h2 class="text-row-1">
+                    <span class="mdi mdi-wallet-travel"></span>
+                    {{ item.mileage }} Dặm
+                  </h2>
+                </v-col>
+                <v-col v-if="store.storeName">
+                  <h2 class="text-row-1">
+                    <span class="mdi mdi-map-marker"></span>
+                    {{ store.storeName }}
+                  </h2>
+                </v-col>
+              </v-row>
+              <hr />
+              <v-row>
+                <h1 class="text-header">Đặc điểm</h1>
+              </v-row>
+              <v-row>
+                <span v-if="item.vehicleSeat"
+                  ><Icon icon="ic:baseline-chair"
+                /></span>
+                <v-col cols="2" v-if="item.vehicleSeat">
+                  <h4>Số ghế</h4>
+                  <h2 class="characteristic">{{ item.vehicleSeat }} Ghế</h2>
+                </v-col>
+                <span v-if="item.vehicleEngine"
+                  ><Icon icon="arcticons:automation"
+                /></span>
+                <v-col cols="3" v-if="item.vehicleEngine">
+                  <h4>Truyền động</h4>
+                  <h2 class="characteristic">{{ item.vehicleEngine }}</h2>
+                </v-col>
+                <span><Icon icon="mdi:gasoline" /></span>
+                <v-col cols="2">
+                  <h4>Nhiên liệu</h4>
+                  <h2 class="characteristic">Xăng</h2>
+                </v-col>
+                <span v-if="item.vehicleConsumedEnergy"
+                  ><Icon icon="mdi:motor"
+                /></span>
+                <v-col cols="4" v-if="item.vehicleConsumedEnergy">
+                  <h4>Năng lượng tiêu hao</h4>
+                  <h2 class="characteristic">
+                    {{ item.vehicleConsumedEnergy }}/100km
+                  </h2>
+                </v-col>
+              </v-row>
+              <hr />
+              <v-row>
+                <h1 class="text-header">Mô tả</h1>
+              </v-row>
+              <v-row>
+                <h2 class="describe">{{ item.vehicleDescribe }}</h2>
+              </v-row>
+              <hr />
+              <v-row>
+                <h1 class="text-header">Điều khoản</h1>
+              </v-row>
+              <v-row>
+                <div class="rules">
+                  <div>
+                    <h2>Quy định khác:</h2>
+                  </div>
+                  <div>
+                    <h2>&#8728; Sử dụng xe đúng mục đích.</h2>
+                    <h2>
+                      &#8728; Không sử dụng xe thuê vào mục đích phi pháp, trái
+                      pháp luật.
+                    </h2>
+                    <h2>&#8728; Không sử dụng xe thuê để cầm cố, thuế chấp.</h2>
+                    <h2>
+                      &#8728; Không hút thuốc, nhả kẹo cao su, xả rác trong xe.
+                    </h2>
+                    <h2>&#8728; Không chở hàng quốc cấm, hàng dễ cháy nổ.</h2>
+                    <h2>
+                      &#8728; Không chở hoa quả, thực phẩm nặng mùi trong xe,
+                      khách hàng vui lòng vệ sinh xe.
+                    </h2>
+                    <h2>
+                      &#8728; Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách
+                      hàng vui lòng vệ sinh xe sạch sẽ hoặc gửi phụ thu phí vệ
+                      sinh xe.
+                    </h2>
+                    <h2>
+                      Trân trọng cảm ơn, chúc quý khách hàng có những chuyến đi
+                      tuyệt vời!
+                    </h2>
+                  </div>
                 </div>
-                <div>
-                  <h2>&#8728; Sử dụng xe đúng mục đích.</h2>
-                  <h2>&#8728; Không sử dụng xe thuê vào mục đích phi pháp, trái pháp luật.</h2>
-                  <h2>&#8728; Không sử dụng xe thuê để cầm cố, thuế chấp.</h2>
-                  <h2>&#8728; Không hút thuốc, nhả kẹo cao su, xả rác trong xe.</h2>
-                  <h2>&#8728; Không chở hàng quốc cấm, hàng dễ cháy nổ.</h2>
-                  <h2>&#8728; Không chở hoa quả, thực phẩm nặng mùi trong xe, khách hàng vui lòng vệ sinh xe.</h2>
-                  <h2>&#8728; Khi trả xe, nếu xe bẩn hoặc có mùi trong xe, khách hàng vui lòng vệ sinh xe sạch sẽ hoặc gửi phụ thu phí vệ sinh xe.</h2>
-                  <h2>Trân trọng cảm ơn, chúc quý khách hàng có những chuyến đi tuyệt vời!</h2>
-                </div>
-              </div>                                
-            </v-row>
-          </v-col>
-          <v-col cols="3.5" class="body-right">
-            <v-row>
-              <h1 class="text-price">{{ item.vehicleValue?.toLocaleString() }}đ/giờ</h1>
-            </v-row>
-            <div class="note">
-              <div class="note-text">
-                <v-row>
-                  <div class="received-date">
-                    <v-col>
-                      <h4>Ngày nhận xe</h4>
-                      <!-- <vc-input-date
-                        v-model="state.receivedDate"
-                      ></vc-input-date> -->
-                      <input type="datetime-local" v-model="state.receivedDate"/>
-                    </v-col>
-                    <span
-                      v-if="receivedDateInvalid"
-                      class="error-message"
-                    >Vui lòng chọn ngày nhận từ hôm nay trở đi!</span>
+              </v-row>
+            </v-col>
+            <v-col cols="3.5" class="body-right">
+              <v-row>
+                <h1 class="text-price">
+                  {{ item.vehicleValue?.toLocaleString() }}đ/giờ
+                </h1>
+              </v-row>
+              <div class="note">
+                <div class="note-text">
+                  <v-row>
+                    <div class="received-date">
+                      <v-col>
+                        <h4>Ngày nhận xe</h4>
+                        <input
+                          type="datetime-local"
+                          v-model="state.receivedDate"
+                        />
+                      </v-col>
+                      <span v-if="receivedDateInvalid" class="error-message"
+                        >Vui lòng chọn ngày nhận từ hôm nay trở đi!</span
+                      >
+                    </div>
+                    <div class="return-date">
+                      <v-col>
+                        <h4>Ngày trả xe</h4>
+                        <input
+                          type="datetime-local"
+                          v-model="state.returnDate"
+                          :disabled="disableReturnDate"
+                        />
+                      </v-col>
+                      <span v-if="returnDateInvalid" class="error-message"
+                        >Ngày trả phải lớn hơn ngày nhận!</span
+                      >
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div class="location">
+                      <v-col>
+                        <h4>Địa điểm nhận xe</h4>
+                        <h2>{{ store.storeName }}</h2>
+                      </v-col>
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div class="insurances">
+                      <v-col>
+                        <h4>Bảo hiểm</h4>
+                        <v-select
+                          v-model="state.selectedInsurance"
+                          :items="state.dataInsurance"
+                          item-title="insuranceName"
+                          item-value="insuranceId"
+                          variant="underlined"
+                          density="comfortable"
+                          multiple
+                          chips
+                        />
+                      </v-col>
+                    </div>
+                  </v-row>
+                  <v-row>
+                    <div class="options">
+                      <v-col>
+                        <h4>Options khác</h4>
+                        <v-select
+                          v-model="state.selectedOption"
+                          :items="state.dataOption"
+                          item-title="optionName"
+                          item-value="optionId"
+                          variant="underlined"
+                          density="comfortable"
+                          multiple
+                          chips
+                        />
+                      </v-col>
+                    </div>
+                  </v-row>
+                  <v-row class="hr"></v-row>
+                  <div class="price-options">
+                    <div>
+                      <v-row>
+                        <v-col>
+                          <h2>Đơn giá thuê theo giờ</h2>
+                        </v-col>
+                        <v-col class="align-right">
+                          <h2>{{ item.vehicleValue?.toLocaleString() }}đ</h2>
+                        </v-col>
+                      </v-row>
+                      <v-row
+                        v-for="item in selectedInsurances"
+                        :key="item?.insuranceId"
+                      >
+                        <v-col>
+                          <h2>{{ item?.insuranceName }}</h2>
+                        </v-col>
+                        <v-col class="align-right">
+                          <h2>{{ item?.insuranceValue?.toLocaleString() }}đ</h2>
+                        </v-col>
+                      </v-row>
+                      <v-row
+                        v-for="item in selectedOptions"
+                        :key="item?.optionId"
+                      >
+                        <v-col>
+                          <h2>{{ item?.optionName }}</h2>
+                        </v-col>
+                        <v-col class="align-right">
+                          <h2>{{ item?.optionValue?.toLocaleString() }}đ</h2>
+                        </v-col>
+                      </v-row>
+                    </div>
                   </div>
-                  <div class="return-date">
-                    <v-col>
-                      <h4>Ngày trả xe</h4>
-                      <!-- <vc-input-date
-                        v-model="state.returnDate"
-                        :disabled="disableReturnDate"
-                      ></vc-input-date> -->
-                      <input 
-                        type="datetime-local" 
-                        v-model="state.returnDate"
-                        :disabled="disableReturnDate"/>
-                    </v-col>
-                    <span
-                      v-if="returnDateInvalid"
-                      class="error-message"
-                    >Ngày trả phải lớn hơn ngày nhận!</span>
-                  </div>
-                </v-row>
-                <v-row>
-                  <div class="location">
-                    <v-col>
-                      <h4>Địa điểm nhận xe</h4>
-                      <h2>{{ store.storeName }}</h2>
-                    </v-col>
-                  </div>
-                </v-row>
-                <v-row>
-                  <div class="insurances">
-                    <v-col>
-                      <h4>Bảo hiểm</h4>
-                      <v-select
-                        v-model="state.selectedInsurance"
-                        :items="state.dataInsurance"
-                        item-title="insuranceName"
-                        item-value="insuranceId"
-                        variant="underlined"
-                        density="comfortable"
-                        multiple
-                        chips
-                      />
-                    </v-col>                               
-                  </div>                                  
-                </v-row>
-                <v-row>
-                  <div class="options">
-                    <v-col>
-                      <h4>Options khác</h4>
-                      <v-select
-                        v-model="state.selectedOption"
-                        :items="state.dataOption"
-                        item-title="optionName"
-                        item-value="optionId"
-                        variant="underlined"
-                        density="comfortable"
-                        multiple
-                        chips
-                      />
-                    </v-col>                               
-                  </div>                                  
-                </v-row>
-                <v-row class="hr"></v-row>
-                <div class="price-options">
-                  <div>  
+                  <v-row class="hr"></v-row>
+                  <div class="expense">
                     <v-row>
-                      <v-col>
-                        <h2>Đơn giá thuê theo giờ</h2>
+                      <v-col class="left">
+                        <h2>Tổng thời gian thuê</h2>
                       </v-col>
                       <v-col class="align-right">
-                        <h2>{{ item.vehicleValue?.toLocaleString() }}đ</h2>
+                        <h2>{{ borrowingTime }} giờ</h2>
                       </v-col>
                     </v-row>
-                    <v-row v-for="item in selectedInsurances" :key="item?.insuranceId">
-                      <v-col>
-                        <h2>{{ item?.insuranceName }}</h2>
+                    <v-row>
+                      <v-col class="left">
+                        <h2>Tổng phí thuê xe</h2>
                       </v-col>
                       <v-col class="align-right">
-                        <h2>{{ item?.insuranceValue?.toLocaleString() }}đ</h2>
+                        <h2>{{ totalRentalFees?.toLocaleString() }}đ</h2>
                       </v-col>
                     </v-row>
-                    <v-row v-for="item in selectedOptions" :key="item?.optionId">
-                      <v-col>
-                        <h2>{{ item?.optionName }}</h2>
+                    <v-row>
+                      <v-col class="left">
+                        <h2>Tổng chi phí khác</h2>
                       </v-col>
                       <v-col class="align-right">
-                        <h2>{{ item?.optionValue?.toLocaleString() }}đ</h2>
+                        <h2>{{ totalOtherExpenses?.toLocaleString() }}đ</h2>
                       </v-col>
                     </v-row>
                   </div>
-                </div>  
-                <v-row class="hr"></v-row>      
-                <div class="expense">    
+                  <v-row class="hr"></v-row>
                   <v-row>
-                    <v-col class="left">
-                      <h2>Tổng thời gian thuê</h2>
+                    <v-col>
+                      <h2>Tổng cộng</h2>
                     </v-col>
                     <v-col class="align-right">
-                      <h2>{{ borrowingTime }} giờ</h2>
-                    </v-col>
-                  </v-row>                                                           
-                  <v-row>
-                    <v-col class="left">
-                      <h2>Tổng phí thuê xe</h2>
-                    </v-col>
-                    <v-col class="align-right">
-                      <h2>{{ totalRentalFees?.toLocaleString() }}đ</h2>
+                      <h2>{{ totalCost?.toLocaleString() }}đ</h2>
                     </v-col>
                   </v-row>
                   <v-row>
-                    <v-col class="left">
-                      <h2>Tổng chi phí khác</h2>
-                    </v-col>
-                    <v-col class="align-right">
-                      <h2>{{ totalOtherExpenses?.toLocaleString() }}đ</h2>
-                    </v-col>
+                    <v-col></v-col>
                   </v-row>
-                </div>                          
-                <v-row class="hr"></v-row>
-                <v-row>
-                  <v-col>
-                    <h2>Tổng cộng</h2>
-                  </v-col>
-                  <v-col class="align-right">
-                    <h2>{{ totalCost?.toLocaleString() }}đ</h2>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col></v-col>
-                </v-row>
-                <v-row  class="book-a-car">
-                  <v-btn 
-                    :disabled="isBookButtonDisabled"
-                    @click="clickBookACar()"
-                  >Đặt Xe</v-btn>
-                </v-row>
-                <div v-if="state.status" class="success-message">{{ state.successMessage }}</div>
-              </div>                               
-            </div>                           
-          </v-col>               
-        </div>               
-      </v-container>
-      </div>     
+                  <v-row
+                    class="book-a-car"
+                    v-if="state.dataOrderCar.length != 1"
+                  >
+                    <v-btn
+                      :disabled="isBookButtonDisabled"
+                      @click="clickBookACar()"
+                      >Đặt Xe</v-btn
+                    >
+                  </v-row>
+                  <v-row class="book-a-car" v-else>
+                    <v-btn
+                      :disabled="isBookButtonDisabled"
+                      @click="clickUpdateBookACar()"
+                      >Đặt Xe</v-btn
+                    >
+                  </v-row>
+                </div>
+              </div>
+            </v-col>
+          </div>
+        </v-container>
+      </div>
     </v-form>
   </v-card>
 </template>
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
+import { Icon } from "@iconify/vue";
 import { reactive, onMounted, computed, watch, ref } from "vue";
 import VehiclesService from "@/services/vehicles.service";
 import Vehicles from "@/interfaces/Vehicles";
@@ -295,10 +337,12 @@ import Options from "@/interfaces/Options";
 import OptionService from "@/services/options.service";
 import Insurances from "@/interfaces/Insurances";
 import InsuranceService from "@/services/insurances.service";
-import CarCartService from "@/services/car_cart.service"
-import { Exception } from 'sass';
+import CarCartService from "@/services/car_cart.service";
+import CarCart from "@/interfaces/CarCart";
+import { Exception } from "sass";
 import { useRouter } from "vue-router";
 
+const idUserLogin = 2;
 var router = useRouter();
 interface Emits {
   (event: "clickCarDetail"): void;
@@ -323,17 +367,16 @@ const data = reactive({
 const state = reactive({
   dataDetail: [] as Vehicles[],
   dataOption: [] as Options[],
-  selectedOption: [] as Options[],
+  selectedOption: [] as Number[],
   dataInsurance: [] as Insurances[],
-  selectedInsurance: [] as Insurances[],
-  receivedDate: null,
-  returnDate: null,
+  selectedInsurance: [] as Number[],
+  dataOrderCar: [] as CarCart[],
+  receivedDate: null as string | null,
+  returnDate: null as string | null,
   totalRentalFee: 0,
-  successMessage: '',
-  status: false,
 });
 
-onMounted( async () => {
+onMounted(async () => {
   try {
     await getData(data);
     await getDataOption();
@@ -350,9 +393,12 @@ const getData = async (data: object) => {
     if (response && response.data) {
       state.dataDetail = response.data.vehicles_list;
       if (!state.dataDetail[0].vehicleDescribe) {
-        state.dataDetail[0].vehicleDescribe = "Chúng tôi sẽ thêm mô tả sau."
+        state.dataDetail[0].vehicleDescribe = "Chúng tôi sẽ thêm mô tả sau.";
       }
-      state.totalRentalFee += state.dataDetail[0].vehicleValue? state.dataDetail[0].vehicleValue : 0
+      state.totalRentalFee += state.dataDetail[0].vehicleValue
+        ? state.dataDetail[0].vehicleValue
+        : 0;
+      await getDataOrderCar();
     }
   } catch (error) {
     console.log(error);
@@ -362,7 +408,7 @@ const getData = async (data: object) => {
 // Get list of options save to state.dataOption
 const getDataOption = async () => {
   try {
-    await OptionService.getAllOptions().then( async (res) => {
+    await OptionService.getAllOptions().then(async (res) => {
       state.dataOption = [...res.mstOptions];
     });
   } catch (error) {
@@ -373,9 +419,43 @@ const getDataOption = async () => {
 // Get list of insurances save to state.dataOption
 const getDataInsurance = async () => {
   try {
-   await InsuranceService.getAllInsurance().then( async (res) => {
+    await InsuranceService.getAllInsurance().then(async (res) => {
       state.dataInsurance = [...res.mstIsurances];
     });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Find and get data if accountId and vehicleId is in CarCart table
+const getDataOrderCar = async () => {
+  try {
+    const find = {
+      accountId: idUserLogin,
+      vehicleId: state.dataDetail[0].vehicleId,
+    };
+    const response = await CarCartService.getCarCart(find);
+    if (response?.carCartList?.length > 0) {
+      state.dataOrderCar = response.carCartList;
+      state.receivedDate = response.carCartList[0].rentalStartDate ?? null;
+      state.returnDate = response.carCartList[0].rentalEndDate ?? null;
+      let insuranceArray: Array<{
+        insuranceId: number;
+        insuranceName: string;
+        insuranceValue: number;
+      }> = [];
+      let optionArray: Array<{
+        optionId: number;
+        optionName: string;
+        optionValue: number;
+      }> = [];
+      insuranceArray = response.carCartList[0].insurances ?? [];
+      optionArray = response.carCartList[0].options ?? [];
+      state.selectedInsurance = insuranceArray.map(
+        (insurance) => insurance.insuranceId
+      );
+      state.selectedOption = optionArray.map((option) => option.optionId);
+    }
   } catch (error) {
     console.log(error);
   }
@@ -401,7 +481,7 @@ const borrowingTime = computed(() => {
     const receivedTime = new Date(state.receivedDate);
     const returnTime = new Date(state.returnDate);
     const timeDiff = returnTime.getTime() - receivedTime.getTime();
-    const daysDiff = Math.ceil(timeDiff / (1000 * 3600));  
+    const daysDiff = Math.ceil(timeDiff / (1000 * 3600));
     return daysDiff;
   } else {
     return 0;
@@ -410,8 +490,8 @@ const borrowingTime = computed(() => {
 
 // Computed to calculate the total cost of car rental
 const totalRentalFees = computed(() => {
-  return state.totalRentalFee * borrowingTime.value
-})
+  return state.totalRentalFee * borrowingTime.value;
+});
 
 // Computed to calculate the total option value
 const totalOptionValue = computed(() => {
@@ -438,8 +518,8 @@ const totalOtherExpenses = computed(() => {
 
 // Computed to calculate the total cost when renting a car
 const totalCost = computed(() => {
-  return totalOtherExpenses.value + totalRentalFees.value
-})
+  return totalOtherExpenses.value + totalRentalFees.value;
+});
 
 // Check validate return date
 const returnDateInvalid = computed(() => {
@@ -456,7 +536,7 @@ const returnDateInvalid = computed(() => {
 const receivedDateInvalid = computed(() => {
   if (state.receivedDate) {
     const receivedTime = new Date(state.receivedDate);
-    const date = new Date()
+    const date = new Date();
     return receivedTime <= date;
   } else {
     return false;
@@ -465,70 +545,97 @@ const receivedDateInvalid = computed(() => {
 
 // Check disable return date
 const disableReturnDate = computed(() => {
-  return !state.receivedDate || receivedDateInvalid.value
-})
+  return !state.receivedDate || receivedDateInvalid.value;
+});
 
 const isBookButtonDisabled = computed(() => {
   // Check if the parking button is disabled or not
   return !state.returnDate || returnDateInvalid.value;
 });
 
+// Create new Book Car
 const clickBookACar = async () => {
   try {
-    var oderCards: any = [];
+    var oderCard = {
+      accountId: idUserLogin,
+      vehicleId: data.vehicleId,
+      rentalStartDate: state.receivedDate,
+      rentalEndDate: state.returnDate,
+      statusCart: 0,
+      createdBy: 2,
+      totalHour: borrowingTime.value,
+      totalHourCar: totalRentalFees.value,
+      totalOption: totalOptionValue.value,
+      totalInsurance: totalInsuranceValue.value,
+      totalCost: totalCost.value,
+      optionId: null,
+      insuranceId: null,
+    };
     if (selectedOptions.value) {
+      const options: any = [];
       selectedOptions.value.forEach((option) => {
-        var oderCard = {
-          accountId: 2,
-          vehicleId: data.vehicleId,
-          optionId: option?.optionId,
-          rentalStartDate: state.receivedDate,
-          rentalEndDate: state.returnDate,
-          statusCart: 0,
-          createdBy: 2,
-        };
-        oderCards.push(oderCard)
+        options.push(option?.optionId);
       });
-    };
+      oderCard.optionId = options.join(",");
+    }
     if (selectedInsurances.value) {
+      const insurances: any = [];
       selectedInsurances.value.forEach((insurance) => {
-        var oderCard = {
-          "accountId": 2,
-          "vehicleId": data.vehicleId,
-          "insuranceId": insurance?.insuranceId,
-          "rentalStartDate": state.receivedDate,
-          "rentalEndDate": state.returnDate,
-          "statusCart": 0,
-          "createdBy": 2,
-        };
-        oderCards.push(oderCard)
+        insurances.push(insurance?.insuranceId);
       });
-    };
-    if(oderCards.length === 0) {
-       var oderCard = {
-          "accountId": 2,
-          "vehicleId": data.vehicleId,
-          "rentalStartDate": state.receivedDate,
-          "rentalEndDate": state.returnDate,
-          "statusCart": 0,
-          "createdBy": 2,
-        };
-      oderCards.push(oderCard)
-    } 
-    await CarCartService.addMultiCarCart(oderCards);
-    state.status = true
-    state.successMessage = 'Đặt xe thành công!';
-    router.push('/payment_management');
-  } catch (error){
+      oderCard.insuranceId = insurances.join(",");
+    }
+    await CarCartService.addCarCart(oderCard);
+    router.push({"name": "PaymentManagement"});
+  } catch (error) {
     console.log(error);
   }
-}
+};
 
+// Update Book Car
+const clickUpdateBookACar = async () => {
+  try {
+    var oderCards = {
+      carCartId: state.dataOrderCar[0].carCartId,
+      accountId: idUserLogin,
+      vehicleId: data.vehicleId,
+      rentalStartDate: state.receivedDate,
+      rentalEndDate: state.returnDate,
+      statusCart: 0,
+      createdBy: 2,
+      totalHour: borrowingTime.value,
+      totalHourCar: totalRentalFees.value,
+      totalOption: totalOptionValue.value,
+      totalInsurance: totalInsuranceValue.value,
+      totalCost: totalCost.value,
+      optionId: null,
+      insuranceId: null,
+    };
+    if (selectedOptions.value) {
+      const options: any = [];
+      selectedOptions.value.forEach((option) => {
+        options.push(option?.optionId);
+      });
+      oderCards.optionId = options.join(",");
+    }
+    if (selectedInsurances.value) {
+      const insurances: any = [];
+      selectedInsurances.value.forEach((insurance) => {
+        insurances.push(insurance?.insuranceId);
+      });
+      oderCards.insuranceId = insurances.join(",");
+    }
+    await CarCartService.updateCarCart(oderCards);
+    router.push({"name": "PaymentManagement"});
+  } catch (error) {
+    console.log(error);
+  }
+};
 </script>
 <style lang="css" scoped>
-.v-card.v-theme--light.v-card--density-default.v-card--variant-elevated{
-   max-width: 90%;
-   border-radius: 30px;
+.v-card.v-theme--light.v-card--density-default.v-card--variant-elevated {
+  max-width: 90%;
+  border-radius: 30px;
 }
 div.header {
   padding: 20px;
@@ -636,7 +743,7 @@ div h2 {
 div.rules {
   padding: 30px;
 }
-.v-col.body-right{
+.v-col.body-right {
   border: 1px black solid;
   float: right;
   margin-top: 10px;
@@ -737,7 +844,7 @@ div.expense .v-row .v-col.left h2 {
 .align-right {
   text-align: right;
 }
-.success-message{
+.success-message {
   color: green;
   font-size: 25px;
   text-align: center;

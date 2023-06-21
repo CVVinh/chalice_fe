@@ -277,7 +277,7 @@ export default defineComponent({
     //     props.listVehicleInCheckOut.forEach((element: any) => {
     //       let optionsPrice = 0;
     //       let carPrice = 0;
-    //       carPrice = element.vehicleValue;
+    //       carPrice = element.vehical.vehicleValue;
     //       element.carPrice = carPrice;
     //       element.insurances.forEach((insu: any) => {
     //         optionsPrice += insu.insuranceValue;
@@ -291,7 +291,6 @@ export default defineComponent({
     //     });
     //   }
     // });
-   
     return { ConvertUtils, FormatDate };
   },
 });

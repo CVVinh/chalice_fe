@@ -1,5 +1,5 @@
 <template>
-  <div v-if="listDataVehicals">
+  <div v-if="listDataVehicals && listDataVehicals.length > 0">
     <v-card
       class="mx-auto elevation-5 mt-5"
       width="100%"
@@ -40,7 +40,7 @@
                 </div>
                 <div style="padding: 0.5rem 1rem" class="d-flex align-center">
                   <v-icon icon="mdi mdi-bag-carry-on" />
-                  <p class="ml-3">{{ item.mileage }} km</p> 
+                  <p class="ml-3">{{ item.mileage }} km</p>
                 </div>
               </div>
             </div>
@@ -57,6 +57,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeMount, reactive, watch } from "vue";
 import Vehicles from "@/interfaces/Vehicles";
+import { computed } from "vue";
 var arrVehicalSelected = ref<any[]>([]);
 
 const props = defineProps({
@@ -77,10 +78,15 @@ const props = defineProps({
 const emit = defineEmits(["arrVehicalSelected"]);
 
 const CarInformation = ref();
-onMounted(() => {
+
+onMounted(async () => {
   if (props.isOpen === true) {
     CarInformation.value = props.infomationCarInCheckOut;
   }
+});
+
+watch(() => props.listDataVehicals, async (newValue) => {
+  arrVehicalSelected.value =  props.listDataVehicals
 });
 
 watch(arrVehicalSelected, async () => {

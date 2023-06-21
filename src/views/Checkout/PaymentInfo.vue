@@ -2,14 +2,24 @@
   <v-container>
     <v-row>
       <v-col cols="8">
-        <v-sheet>
-          <div class="d-flex flex-column pa-2">
-            <span class="text-h3 font-weight-bold mb-3">Checkout</span>
-            <p class="text-h6 font-weight-regular">
-              Xác nhận thông tin thanh toán
-            </p>
-          </div>
-        </v-sheet>
+        <v-row>
+          <v-col cols="1">
+            <v-btn
+              icon="mdi-arrow-left"
+              @click="redirectToCartDetails()"
+            ></v-btn>
+          </v-col>
+          <v-col cols="7">
+            <v-sheet>
+              <div class="d-flex flex-column pa-2">
+                <span class="text-h3 font-weight-bold mb-3">Checkout</span>
+                <p class="text-h6 font-weight-regular">
+                  Xác nhận thông tin thanh toán
+                </p>
+              </div>
+            </v-sheet>
+          </v-col>
+        </v-row>
         <hr />
       </v-col>
     </v-row>
@@ -46,7 +56,12 @@
         </v-sheet>
         <!-- payment method -->
         <v-sheet class="mt-7">
-          <PaymentMethodCard :mstPaymentMethods="mstPaymentMethods" />
+          <PaymentMethodCard
+            :mstPaymentMethods="mstPaymentMethods"
+            :paymentMethodIndexSelected="paymentMethodIndexSelected"
+            :updatePaymentMethodIndexSelected="updatePaymentMethodIndexSelected"
+            :paymentInfomation="paymentInfomation"
+          />
         </v-sheet>
 
         <div class="d-flex mt-3 justify-end">
@@ -74,6 +89,8 @@
     :listVehiclesSelected="listVehiclesSelected"
     :totalCost="totalCost"
     :listDataVehicals="listVehiclesSelected"
+    :paymentMethodIndexSelected="paymentMethodIndexSelected"
+    :paymentInfomation="paymentInfomation"
   />
 </template>
 
@@ -89,10 +106,12 @@ import CarInformationCard from "@/components/stub/CarInformationCard.vue";
 import RenterInformationCard from "@/components/stub/RenterInformationCard.vue";
 import PaymentMethodCard from "@/components/stub/PaymentMethodCard.vue";
 import PaymentPriceCard from "@/components/stub/PaymentPriceCard.vue";
+import { useRouter } from "vue-router";
 
+var router = useRouter();
 var store = useStore();
 var getStatusRes = computed(() => store.getters.getStatusResponse);
-var idUserCurrent = 2;
+var idUserCurrent = 1;
 var mstBaseUser = ref<any[]>([]);
 var mstPaymentMethods = ref<any[]>([]);
 var listVehiclesSelected = ref<any[]>([]);
@@ -109,6 +128,13 @@ var baseUserInfo = ref({
   eMailAddress: null,
   telephoneNumber: null,
   faxNumber: null,
+});
+const paymentMethodIndexSelected = ref(-1);
+const paymentInfomation = ref({
+  cardholderName: null,
+  cardNumber: null,
+  cardExpiryDate: null,
+  cvc: null,
 });
 
 onMounted(async () => {
@@ -145,20 +171,21 @@ async function calculatorTotalCost(data: any) {
   );
   calculatorOptionIssurance();
 }
-
 async function calculatorOptionIssurance() {
   totalCost.value = 0;
+
   listVehiclesSelected.value.forEach((item: any) => {
-    totalCost.value  += item.totalCost
+    totalCost.value += item.totalCost;
   });
 }
-
 function filterUserInfo(newValue: any) {
   baseUserInfo.value = mstBaseUser.value.filter(
     (ele: any) => ele.baseId == newValue
   )[0];
 }
-
+function redirectToCartDetails() {
+  router.push({"name": "CarSearch"});
+}
 
 // async function addOrderRenderCar() {
 //   var objectOrderDetail: any = [];
@@ -183,6 +210,9 @@ function filterUserInfo(newValue: any) {
 //   await RentalOrderService.addRentalOrder(objectOrderCar);
 //   console.log("add order rental successful!");
 // }
+function updatePaymentMethodIndexSelected(index: any) {
+  paymentMethodIndexSelected.value = index;
+}
 </script>
 
 <style scoped lang="scss"></style>

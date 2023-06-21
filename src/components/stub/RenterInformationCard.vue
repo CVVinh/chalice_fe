@@ -19,7 +19,7 @@
           variant="outlined"
         ></v-select>
       </div>
-      <div>
+      <div class="mb-3">
         <label for="email"><b>Email</b> </label>
         <v-text-field
           id="email"
@@ -32,7 +32,7 @@
         >
         </v-text-field>
       </div>
-      <div>
+      <div class="mb-3">
         <label for="address"><b>Địa chỉ người thuê</b> </label
         ><v-text-field
           id="address"
@@ -43,7 +43,7 @@
           :rules="[!!baseUserInfo.address || `This field is required.`]"
         ></v-text-field>
       </div>
-      <div>
+      <div class="mb-3">
         <label for="faxNumber"><b>Số fax</b> </label
         ><v-text-field
           type="number"

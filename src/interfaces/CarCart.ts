@@ -6,8 +6,8 @@ export default interface CarCart {
     carCartId?: number,
     accountId?: number,
     vehicleId?: number,
-    optionId?: number,
-    insuranceId?: number,
+    optionId?: string,
+    insuranceId?: string,
     statusCart?: number,
     totalHour?: number,
     totalHourCar?: number,
@@ -16,7 +16,7 @@ export default interface CarCart {
     totalCost?: number,
     rentalStartDate?: string,
     rentalEndDate?: string,
-    
+
     createdBy?: number,
     modifiedBy?: number,
     deletedBy?: number,
@@ -27,6 +27,6 @@ export default interface CarCart {
     isDeleted?: boolean,
 
     vehicles?: Vehicles;
-    options?: Options[];
-    insurances?: Insurances[];
+    options?: any[];
+    insurances?: any[];
 }

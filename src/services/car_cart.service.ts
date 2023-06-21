@@ -5,7 +5,7 @@ import apiClient from "./api.service";
 class CarCartService {
   async getAllCarCart(dataParam?: object): Promise<CarCartModelResponse> {
     return await apiClient
-      .get(CONST.API.CAR_CART.LIST, { params: dataParam })
+      .post(CONST.API.CAR_CART.LIST, { params: dataParam })
       .then((response: any) => {
         return response.data as CarCartModelResponse;
       })
@@ -70,6 +70,14 @@ class CarCartService {
   ): Promise<CarCartModelResponse> {
     return await apiClient
       .post(CONST.API.CAR_CART.DELETE_SOFT_MULTI, { params: dataParam })
+      .then((response: any) => {
+        return response.data as CarCartModelResponse;
+      })
+      .catch((error: any) => error.response);
+  }
+  async getCarCart(dataParam?: object): Promise<CarCartModelResponse> {
+    return await apiClient
+      .post(CONST.API.CAR_CART.CAR_CART_DETAIL, { params: dataParam })
       .then((response: any) => {
         return response.data as CarCartModelResponse;
       })

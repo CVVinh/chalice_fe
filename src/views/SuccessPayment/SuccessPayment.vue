@@ -16,7 +16,7 @@
             <p>Bạn đã thanh toán thành công hợp đồng giao dịch thuê xe</p>
             <p>
               Mã giao dịch thuê xe của bạn là
-              <b>GD_0000{{ order.orderId }}</b>
+              <b>GD_000{{ Object.values(order.orderId)[0] }}</b>
             </p>
             <p>
               Hãy Đến địa điểm nhận xe đã chọn để nhận xe đúng thời gian trong

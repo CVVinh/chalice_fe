@@ -60,6 +60,7 @@ const CONST = {
             //LIST: `/func/get-car-cart-list`,
             LIST: `/func/get-list-car-cart`,
             DETAIL: `/func/get-car-cart-info`,
+            CAR_CART_DETAIL: `/func/get-list-car-cart`,
             CREATE: `/func/add-car-cart`,
             CREATE_MULTI: `/func/add-multi-car-cart`,
             UPDATE: `/func/update-car-cart-info`,

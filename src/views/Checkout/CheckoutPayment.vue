@@ -32,7 +32,13 @@
                     />
                   </v-sheet>
                   <v-sheet class="pa-2 ma-2">
-                    <payment-method-card :isOpen="this.isOpen" />
+                    <payment-method-card
+                      :isOpen="this.isOpen"
+                      :paymentMethodIndexSelectedInCheckOut="
+                        paymentMethodIndexSelected
+                      "
+                      :paymentInfomationInCheckOut="paymentInfomation"
+                    />
                   </v-sheet>
                 </div>
               </v-col>
@@ -79,6 +85,8 @@ export default {
     "listVehiclesSelected",
     "totalCost",
     "listDataVehicals",
+    "paymentMethodIndexSelected",
+    "paymentInfomation",
   ],
   components: {
     CarInformationCard,
@@ -98,7 +106,6 @@ export default {
       let cartOrder = [];
       for (let index = 0; index < props.listDataVehicals.length; index++) {
         const element = props.listDataVehicals[index];
-
         const orderDetails = {
           vehicleId: null,
           optionId: null,
@@ -113,30 +120,24 @@ export default {
 
         orderDetails.vehicleId = element.vehicles.vehicleId;
 
-        const optionIds = element.options.map((option) => option.optionId);
-        orderDetails.optionId = optionIds.join(",");
+        orderDetails.optionId = element.optionId;
 
-        const insuranceIds = element.insurances.map(
-          (insurance) => insurance.insuranceId
-        );
-        orderDetails.insuranceId = insuranceIds.join(",");
-        //dang gan tam
+        orderDetails.insuranceId = element.insuranceId;
+
+        //Chưa tính trường hợp đặt 2 chiếc
         orderDetails.quantity = 1;
-        orderDetails.rentalStartDate =
-          element.rentalStartDate;
+        //
+        orderDetails.rentalStartDate = element.rentalStartDate;
         orderDetails.rentalEndDate = element.rentalEndDate;
-
-        const rentalOrderIds = element.rentalOrderCart.map(
-          (cartItem) => cartItem.rentalOrdersCartId
-        );
-        cartOrder.push(...rentalOrderIds);
-
+        cartOrder.push(element.carCartId);
         details.push(orderDetails);
       }
 
       const order = {
         totalAmount: props.totalCost,
+        //chưa có thẻ nên đang gán thanh toán tiền mặt
         paymentMethodId: 1,
+        //đang gán là chưa thanh toán
         rentalStatus: 1,
         details: details,
         cartOrders: cartOrder,
